@@ -95,7 +95,9 @@ Select and Install these themes:
   - WarmNeon
 
 Change the Default Theme to Dark Pastel based theme
-> vim ~/.config/terminator/config
+```
+vim ~/.config/terminator/config
+```
 - Replace the values in the [[default]] theme with your preferred theme under the [[Dark Pastel]] setting.
 - Delete line 'foreground_color = "#ffffff"'
 - Change the palette value to "#000000:#ff5555:#55ff55:#ffff55:#5555ff:#ff55ff:#55ff55:#bbbbbb:#555555:#ff5555:#55ff55:#ffff55:#5555ff:#ff55ff:#55ff55:#ffffff"
