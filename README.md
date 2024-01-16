@@ -24,20 +24,19 @@ Select the N option in the Menu
 
 In the KALI-ROOT-LOGIN Installation page, select N
 
-
-#### Insert Guest Additions CD Image
----
-In the "Device" tab in the top left, select the "Insert Guest Additions CD Image"
-
-#### Install Terminator
-
-sudo apt-get -y install terminator
+reboot
 
 #### Set SUDO permissions for user kali
 
 sudo apt install -y kali-grant-root && sudo dpkg-reconfigure kali-grant-root
 
 select "Enable password-less privilege escalation"
+
+reboot
+
+#### Install Terminator
+
+sudo apt-get -y install terminator
 
 #### Set Up Terminator
 
@@ -48,8 +47,24 @@ wget https://git.io/v5Zww -O $HOME"/.config/terminator/plugings/terminator-theme
 In terminator Preferences:
 - In Global tab
   - set "Unfocused terminal background color" to 80%
-  - set "Re-use profiles for new terminals"
+  - set "Terminal separator size:" to 4
 - In Profiles tab
+  - General tab
+    - unset "Show titlebar"
+    - unset "Use default colors"
+  - In Colors tab
+    - unset "Use colors from system theme"
+  - In Background tab
+    - set "Solid color" 
+  - In Scrolling tab
+    - set "Scrollbar is:" to "Disabled"
+    - set Scrollback to 2000 lines
+  -  In Title Bar
+    - Unset "Use the system font", font should be "Sans Regular 9"
+    - Change colors to:
+      - Focused = White Foreground, Red Background
+      - Inactive = Black Foreground, Cream Background
+      - Receiving = White Foreground, Blue Background
 - In the Keybindings tab
   - Change "split_horiz" to shift+atl+down
   - Change "split_vert" to shift+alt+right
@@ -57,22 +72,29 @@ In terminator Preferences:
 - In Plugins
   - Select CurrDirOpen
   - Select TerminatorThemes
-- In Title Bar
-  - Unset "Use the system font", font should be "Sans Regular 9"
-  - Change colors to:
-    - Focused = White Foreground, Red Background
-    - Inactive = Black Foreground, Cream Background
-    - Receiving = White Foreground, Blue Background
 
 Right click Terminator, and select "Themes" to open the Terminator Themes menu.
 Select and Install these themes:
   - Batman
-  - CrayonPonyFish
+  - Bim
   - Dark Pastel
-  - Treehouse
+  - FunForrest
+  - Solarized Dark High Contrast
+  - Symphonic
   - Ubuntu
   - WarmNeon
-  - Wild Cherry
+
+Change the Default Theme to Dark Pastel based theme
+- Once you install a theme it's stored in Preferences > Profiles. To change an installed theme to the default one open ~/.config/terminator/config
+- Replace the values in the [[default]] theme with your preferred theme under the [profiles] setting.
+- Delete line 'foreground_color = "#ffffff"'
+- Change the palette value to "#000000:#ff5555:#55ff55:#ffff55:#5555ff:#ff55ff:#55ff55:#bbbbbb:#555555:#ff5555:#55ff55:#ffff55:#5555ff:#ff55ff:#55ff55:#ffffff"
+- In the [layouts] [[default]] [[[window0]]] section at the bottom of the config file, append the following lines:
+  - order = 0
+  - position = 198:73
+  - maximized = False
+  - fullscreen = False
+  - size = 1018, 590
 
 
 #### Other Environment Customizations
@@ -85,6 +107,25 @@ Change font:
 
 In firefox, add FoxyProxy extension in the Extensions menu
 
-Change Background to better Background
+Change Background to kali-red-sticker.jpg
 
-Change Terminal Prompt to Classic Prompt
+Change Terminal Prompt to better terminal prompt
+  - vim ~/.zshrc
+  - Find "configure_prompt()" function
+    - go to line starting with "PROMPT=" under the line "oneline)"
+    - Change from - to:
+      - PROMPT=$'${debian_chroot:+($debian_chroot)}${VIRTUAL_ENV:+($(basename $VIRTUAL_ENV))}%B%F{%(#.red.blue)}%n@%m%b%F{reset}:%B%F{$(#.blue.green)}%~%b%F{reset}%(#.#.$) '
+      - PROMPT=$'${debian_chroot:+($debian_chroot)}${VIRTUAL_ENV:+($(basename $VIRTUAL_ENV))}%B%F{red}%n'$prompt_symbol$'%m%b%F{reset}:%B%F{blue}%~ %b%F{reset}%(#.#.$) '
+  - Find the following variables, directly under "configure_prompt()" function
+    - PROMPT_ALTERNATIVE=twoline
+      - change from twoline to oneline
+    - NEWLINE_BEFORE_PROMPT=yes
+      - change to no
+
+Set Terminator to auto open
+- Open "Settings Manager"
+- Open "Session and Startup"
+- click on "Application Autostart"
+- click "+Add" option at bottom
+- Add terminator application to run on startup
+  - command is "terminator"
