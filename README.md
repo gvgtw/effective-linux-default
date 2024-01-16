@@ -114,8 +114,12 @@ Change Terminal Prompt to better terminal prompt
   - Find "configure_prompt()" function
     - go to line starting with "PROMPT=" under the line "oneline)"
     - Change from - to:
-      - PROMPT=$'${debian_chroot:+($debian_chroot)}${VIRTUAL_ENV:+($(basename $VIRTUAL_ENV))}%B%F{%(#.red.blue)}%n@%m%b%F{reset}:%B%F{$(#.blue.green)}%~%b%F{reset}%(#.#.$) '
-      - PROMPT=$'${debian_chroot:+($debian_chroot)}${VIRTUAL_ENV:+($(basename $VIRTUAL_ENV))}%B%F{red}%n'$prompt_symbol$'%m%b%F{reset}:%B%F{blue}%~ %b%F{reset}%(#.#.$) '
+    ```
+        # From
+        PROMPT=$'${debian_chroot:+($debian_chroot)}${VIRTUAL_ENV:+($(basename $VIRTUAL_ENV))}%B%F{%(#.red.blue)}%n@%m%b%F{reset}:%B%F{$(#.blue.green)}%~%b%F{reset}%(#.#.$) '
+        # To
+        PROMPT=$'${debian_chroot:+($debian_chroot)}${VIRTUAL_ENV:+($(basename $VIRTUAL_ENV))}%B%F{red}%n'$prompt_symbol$'%m%b%F{reset}:%B%F{blue}%~ %b%F{reset}%(#.#.$) '
+    ```
   - Find the following variables, directly under "configure_prompt()" function
     - PROMPT_ALTERNATIVE=twoline
       - change from twoline to oneline
