@@ -4,11 +4,10 @@ Default Configuration settings for fresh kali install
 ### Steps for default installation
 ---
 1. Install pimpmykali
-2. Insert Guest Additions CD Image
-3. Set SUDO permissions for user kali
-4. Install Terminator
-5. Set up Terminator
-6. Other Environment Customizations
+2. Set SUDO permissions for user kali
+3. Install and setup Terminator
+4. Change Terminal prompt
+5. Other Environment Customizations
 
 
 #### Install pimpmykali
@@ -27,6 +26,7 @@ In the KALI-ROOT-LOGIN Installation page, select N
 reboot
 
 #### Set SUDO permissions for user kali
+---
 
 sudo apt install -y kali-grant-root && sudo dpkg-reconfigure kali-grant-root
 
@@ -34,11 +34,10 @@ select "Enable password-less privilege escalation"
 
 reboot
 
-#### Install Terminator
+#### Install and setup Terminator
+---
 
 sudo apt-get -y install terminator
-
-#### Set Up Terminator
 
 mkdir -p $HOME/.config/terminator/plugins
 
@@ -86,7 +85,7 @@ Select and Install these themes:
 
 Change the Default Theme to Dark Pastel based theme
 - vim ~/.config/terminator/config
-- Replace the values in the [[default]] theme with your preferred theme under the [profiles] setting.
+- Replace the values in the [[default]] theme with your preferred theme under the [[Dark Pastel]] setting.
 - Delete line 'foreground_color = "#ffffff"'
 - Change the palette value to "#000000:#ff5555:#55ff55:#ffff55:#5555ff:#ff55ff:#55ff55:#bbbbbb:#555555:#ff5555:#55ff55:#ffff55:#5555ff:#ff55ff:#55ff55:#ffffff"
 - In the [layouts] [[default]] [[[window0]]] section at the bottom of the config file, append the following lines:
@@ -96,18 +95,8 @@ Change the Default Theme to Dark Pastel based theme
   - fullscreen = False
   - size = 1018, 590
 
-
-#### Other Environment Customizations
-
-In launcher options in top left, right click drop down arrow next to "Terminal Emulator". Select the + mark, add terminator, then move it to the top.
-
-Change font:
-- default font to "Sans Regular" size 11
-- default monospace font to "Hack Regular" size 11
-
-In firefox, add FoxyProxy extension in the Extensions menu
-
-Change Background to kali-red-sticker.jpg
+#### Change Terminal Prompt
+---
 
 Change Terminal Prompt to better terminal prompt
   - vim ~/.zshrc
@@ -125,6 +114,19 @@ Change Terminal Prompt to better terminal prompt
       - change from twoline to oneline
     - NEWLINE_BEFORE_PROMPT=yes
       - change to no
+
+#### Other Environment Customizations
+---
+
+In launcher options in top left, right click drop down arrow next to "Terminal Emulator". Select the + mark, add terminator, then move it to the top.
+
+Change font:
+- default font to "Sans Regular" size 11
+- default monospace font to "Hack Regular" size 11
+
+In firefox, add FoxyProxy extension in the Extensions menu
+
+Change Background to kali-red-sticker.jpg
 
 Set Terminator to auto open
 - Open "Settings Manager"
