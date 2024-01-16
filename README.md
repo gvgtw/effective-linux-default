@@ -13,35 +13,35 @@ Default Configuration settings for fresh kali install
 #### Install pimpmykali
 ---
 
-sudo apt-get update
+> sudo apt-get update
 
-git clone https://github.com/Dewalt-arch/pimpmykali.git
+> git clone https://github.com/Dewalt-arch/pimpmykali.git
 
-sudo ./pimpmykali/pimpmykali.sh
+> sudo ./pimpmykali/pimpmykali.sh
 
 Select the N option in the Menu
 
 In the KALI-ROOT-LOGIN Installation page, select N
 
-reboot
+> reboot
 
 #### Set SUDO permissions for user kali
 ---
 
-sudo apt install -y kali-grant-root && sudo dpkg-reconfigure kali-grant-root
+> sudo apt install -y kali-grant-root && sudo dpkg-reconfigure kali-grant-root
 
 select "Enable password-less privilege escalation"
 
-reboot
+> reboot
 
 #### Install and setup Terminator
 ---
 
-sudo apt-get -y install terminator
+> sudo apt-get -y install terminator
 
-mkdir -p $HOME/.config/terminator/plugins
+> mkdir -p $HOME/.config/terminator/plugins
 
-wget https://git.io/v5Zww -O $HOME"/.config/terminator/plugings/terminator-themes.py"
+> wget https://git.io/v5Zww -O $HOME"/.config/terminator/plugings/terminator-themes.py"
 
 In terminator Preferences:
 - In Global tab
@@ -84,7 +84,7 @@ Select and Install these themes:
   - WarmNeon
 
 Change the Default Theme to Dark Pastel based theme
-- vim ~/.config/terminator/config
+> vim ~/.config/terminator/config
 - Replace the values in the [[default]] theme with your preferred theme under the [[Dark Pastel]] setting.
 - Delete line 'foreground_color = "#ffffff"'
 - Change the palette value to "#000000:#ff5555:#55ff55:#ffff55:#5555ff:#ff55ff:#55ff55:#bbbbbb:#555555:#ff5555:#55ff55:#ffff55:#5555ff:#ff55ff:#55ff55:#ffffff"
@@ -99,7 +99,7 @@ Change the Default Theme to Dark Pastel based theme
 ---
 
 Change Terminal Prompt to better terminal prompt
-  - vim ~/.zshrc
+  > vim ~/.zshrc
   - Find "configure_prompt()" function
     - go to line starting with "PROMPT=" under the line "oneline)"
     - Change from - to:
