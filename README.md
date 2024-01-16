@@ -90,10 +90,10 @@ Change the Default Theme to Dark Pastel based theme
 - Change the palette value to "#000000:#ff5555:#55ff55:#ffff55:#5555ff:#ff55ff:#55ff55:#bbbbbb:#555555:#ff5555:#55ff55:#ffff55:#5555ff:#ff55ff:#55ff55:#ffffff"
 - In the [layouts] [[default]] [[[window0]]] section at the bottom of the config file, append the following lines:
   - order = 0
-  - position = 198:73
+  - position = 120:73
   - maximized = False
   - fullscreen = False
-  - size = 1018, 590
+  - size = 1080, 590
 
 #### Change Terminal Prompt
 ---
