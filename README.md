@@ -100,7 +100,7 @@ vim ~/.config/terminator/config
 ```
 - Replace the values in the [[default]] theme with your preferred theme under the [[Dark Pastel]] setting.
 - Delete line 'foreground_color = "#ffffff"'
-- Change the palette value to "#000000:#ff5555:#55ff55:#ffff55:#5555ff:#ff55ff:#55ff55:#bbbbbb:#555555:#ff5555:#55ff55:#ffff55:#5555ff:#ff55ff:#55ff55:#ffffff"
+- Change the palette value to "#000000:#ff5555:#55ff55:#ffff55:#5555ff:#b729d9:#55ff55:#bbbbbb:#555555:#ff5555:#55ff55:#ffff55:#5555ff:#b729d9:#2777ff:#ffffff"
 - In the [layouts] [[default]] [[[window0]]] section at the bottom of the config file, append the following lines:
   - order = 0
   - position = 120:73
