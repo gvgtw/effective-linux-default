@@ -108,7 +108,7 @@ vim ~/.config/terminator/config
   - fullscreen = False
   - size = 1080, 590
 
-#### Change Terminal Prompt
+#### Change Terminal Prompt and zsh defaults
 ---
 
 Change Terminal Prompt to better terminal prompt
@@ -129,6 +129,38 @@ Change Terminal Prompt to better terminal prompt
       - change from twoline to oneline
     - NEWLINE_BEFORE_PROMPT=yes
       - change to no
+  
+  - Find and change the following lines in the "# enable syntax-highlighting" section
+    -  Change from - to:
+    ```
+      # From
+      ZSH_HIGHLIGHT_STYLES[unknown-token]=underline
+      ...
+      ZSH_HIGHLIGHT_STYLES[single-hyphen-option]=fg=green
+      ZSH_HIGHLIGHT_STYLES[double-hyphen-option]=fg=green
+
+      # To
+      ZSH_HIGHLIGHT_STYLES[unknown-token]=fg=red,bold
+      ...
+      ZSH_HIGHLIGHT_STYLES[single-hyphen-option]=fg=magenta
+      ZSH_HIGHLIGHT_STYLES[double-hyphen-option]=fg=magenta
+    ```
+
+  - Find and change the following lines in the "# some more ls aliases" section
+    - Change from - to:
+    ```
+      # From
+      alias ll='ls -l'
+      alias la='ls -A'
+      alias l='ls -CF'
+
+      # To
+      alias ll='ls -l'
+      alias la='ls -A'
+      alias l='ls -CF'
+      alias lait='ls -lAit'
+      alias laith='ls -lAith'
+    ``` 
 
 #### Other Environment Customizations
 ---
