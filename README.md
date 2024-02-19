@@ -171,7 +171,7 @@ Change font:
 - default font to "Sans Regular" size 11
 - default monospace font to "Hack Regular" size 11
 
-In firefox, add FoxyProxy extension in the Extensions menu
+In firefox, add FoxyProxy and Wappalyzer extensions in the Extensions menu
 
 Change Background to kali-red-sticker.jpg
 
