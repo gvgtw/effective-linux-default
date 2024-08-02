@@ -74,11 +74,11 @@ In terminator Preferences:
     - set "Scrollbar is:" to "Disabled"
     - set Scrollback to 2000 lines
   -  In Title Bar
-    - Unset "Use the system font", font should be "Sans Regular 9"
-    - Change colors to:
-      - Focused = White Foreground, Red Background
-      - Inactive = Black Foreground, Cream Background
-      - Receiving = White Foreground, Blue Background
+      - Unset "Use the system font", font should be "Sans Regular 9"
+      - Change colors to:
+        - Focused = White Foreground, Red Background
+        - Inactive = Black Foreground, Cream Background
+        - Receiving = White Foreground, Blue Background
 - In the Keybindings tab
   - Change "split_horiz" to shift+atl+down
   - Change "split_vert" to shift+alt+right
