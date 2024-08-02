@@ -169,7 +169,7 @@ Change Terminal Prompt to better terminal prompt
 #### Other Environment Customizations
 ---
 
-In launcher options in top left, right click drop down arrow next to "Terminal Emulator". Select the + mark, add terminator, then move it to the top.
+In launcher options in top left, right click drop down arrow next to "Terminal Emulator". Select "Properties", the + mark, add terminator, then move it to the top.
 
 Change font:
 - default font to "Sans Regular" size 11
@@ -179,10 +179,13 @@ In firefox, add FoxyProxy and Wappalyzer extensions in the Extensions menu
 
 
 
-Install and Change Background to kali-red-sticker.jpg
+Install and Change Background to kali-red-sticker.jpg and change login screen to kali-2.0-lock
 
 ```
 sudo apt install kali-wallpapers-all
+
+#change login screen symbolic link
+sudo ln -fs /usr/share/backgrounds/kali-2.0/kali-2.0-lock-1920x1080.png /usr/share/desktop-base/kali-theme/login/background
 ```
 
 Set Terminator to auto open
