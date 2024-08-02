@@ -51,7 +51,11 @@ mkdir -p $HOME/.config/terminator/plugins
 ```
 
 ```
-wget https://git.io/v5Zww -O $HOME"/.config/terminator/plugings/terminator-themes.py"
+wget https://git.io/v5Zww
+```
+
+```
+mv v5Zww $HOME/.config/terminator/plugins/terminator-themes.py
 ```
 
 In terminator Preferences:
