@@ -177,7 +177,13 @@ Change font:
 
 In firefox, add FoxyProxy and Wappalyzer extensions in the Extensions menu
 
-Change Background to kali-red-sticker.jpg
+
+
+Install and Change Background to kali-red-sticker.jpg
+
+```
+sudo apt install kali-wallpapers-all
+```
 
 Set Terminator to auto open
 - Open "Settings Manager"
