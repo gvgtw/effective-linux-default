@@ -162,8 +162,8 @@ Change Terminal Prompt to better terminal prompt
       alias ll='ls -l'
       alias la='ls -A'
       alias l='ls -CF'
-      alias lait='ls -lAit'
-      alias laith='ls -lAith'
+      alias lt='ls -lArt'
+      alias lla='la -lA'
     ``` 
 
 #### Other Environment Customizations
