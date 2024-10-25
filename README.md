@@ -4,10 +4,11 @@ Default Configuration settings for fresh kali install
 ### Steps for default installation
 ---
 1. Install pimpmykali
-2. Set SUDO permissions for user kali
-3. Install and setup Terminator
-4. Change Terminal prompt
-5. Other Environment Customizations
+2. Install AutoRecon
+3. Set SUDO permissions for user kali
+4. Install and setup Terminator
+5. Change Terminal prompt
+6. Other Environment Customizations
 
 
 #### Install pimpmykali
@@ -27,6 +28,25 @@ In the KALI-ROOT-LOGIN Installation page, select N
 ```
 reboot
 ```
+
+#### Install AutoRecon
+---
+```
+sudo apt install seclists curl dnsrecon enum4linux feroxbuster gobuster impacket-scripts nbtscan nikto nmap onesixtyone oscanner redis-tools smbclient smbmap snmp sslscan sipvicious tnscmd10g whatweb wkhtmltopdf
+```
+```
+sudo apt install python3-venv
+```
+```
+python3 -m pip install --user pipx
+```
+```
+python3 -m pipx ensurepath
+```
+```
+pipx install git+https://github.com/Tib3rius/AutoRecon.git
+```
+
 #### Set SUDO permissions for user kali
 ---
 ```
