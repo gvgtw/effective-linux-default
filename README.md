@@ -9,7 +9,7 @@ Default Configuration settings for fresh kali install
 4. Install and setup Terminator
 5. Change Terminal prompt
 6. Other Environment Customizations
-
+(Optional) 7. Additional Scripts to install
 
 #### Install pimpmykali
 ---
@@ -215,3 +215,18 @@ Set Terminator to auto open
 - click "+Add" option at bottom
 - Add terminator application to run on startup
   - command is "terminator"
+
+#### Additional Scripts to install (Optional)
+---
+
+Install PEASS-ng
+```
+sudo apt install peass
+```
+
+Install Sweetpotato and Godpotato in /opt
+```
+cd /opt
+sudo git clone https://github.com/CCob/SweetPotato
+sudo git clone https://github.com/BeichenDream/GodPotato
+```
