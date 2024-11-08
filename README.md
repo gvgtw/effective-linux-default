@@ -229,6 +229,11 @@ Set Terminator to auto open
 - Add terminator application to run on startup
   - command is "terminator"
 
+Change Kali password
+```
+sudo passwd kali
+```
+
 #### Additional Scripts to install (Optional)
 ---
 
