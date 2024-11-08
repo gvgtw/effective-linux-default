@@ -246,6 +246,18 @@ sudo apt install peass
 Install Ligolo-ng
 ```
 sudo apt install ligolo-ng
+cd /opt
+sudo mkdir ligolo-ng; cd ligolo-ng
+sudo mkdir agent_darwin_amd64; sudo mkdir agent_linux_amd64; sudo mkdir agent_windows_amd64;
+sudo wget -P /opt/ligolo-ng/agent_darwin_amd64 https://github.com/nicocha30/ligolo-ng/releases/download/v0.7.2-alpha/ligolo-ng_agent_0.7.2-alpha_darwin_amd64.tar.gz
+cd /opt/ligolo-ng/agent_darwin_amd64/
+sudo tar -xvzf /opt/ligolo-ng/agent_darwin_amd64/ligolo-ng_agent_0.7.2-alpha_darwin_amd64.tar.gz
+sudo wget -P /opt/ligolo-ng/agent_linux_amd64 https://github.com/nicocha30/ligolo-ng/releases/download/v0.7.2-alpha/ligolo-ng_agent_0.7.2-alpha_linux_amd64.tar.gz
+cd /opt/ligolo-ng/agent_linux_amd64/
+sudo tar -xvzf /opt/ligolo-ng/agent_linux_amd64/ligolo-ng_agent_0.7.2-alpha_linux_amd64.tar.gz 
+sudo wget -P /opt/ligolo-ng/agent_windows_amd64 https://github.com/nicocha30/ligolo-ng/releases/download/v0.7.2-alpha/ligolo-ng_agent_0.7.2-alpha_windows_amd64.zip
+cd /opt/ligolo-ng/agent_windows_amd64/
+sudo unzip /opt/ligolo-ng/agent_windows_amd64/ligolo-ng_agent_0.7.2-alpha_windows_amd64.zip
 ```
 
 Install Sweetpotato and Godpotato in /opt
