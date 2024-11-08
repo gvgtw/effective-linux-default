@@ -197,6 +197,11 @@ Change font:
 
 In firefox, add FoxyProxy and Wappalyzer extensions in the Extensions menu
 
+Clean up Kali Home Directory
+```
+rm -rf ~/Music; rm -rf ~/Videos; rm -rf ~/Templates; rm -rf ~/Public
+mkdir vpn_conf; mkdir results; mkdir share; mkdir targets
+```
 
 
 Install and Change Background to kali-red-sticker.jpg and change login screen to kali-2.0-lock
@@ -222,6 +227,11 @@ Set Terminator to auto open
 Install PEASS-ng
 ```
 sudo apt install peass
+```
+
+Install Ligolo-ng
+```
+sudo apt install ligolo-ng
 ```
 
 Install Sweetpotato and Godpotato in /opt
