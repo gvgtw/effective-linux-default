@@ -200,6 +200,7 @@ In firefox, add FoxyProxy and Wappalyzer extensions in the Extensions menu
 Clean up Kali Home Directory
 ```
 rm -rf ~/Music; rm -rf ~/Videos; rm -rf ~/Templates; rm -rf ~/Public
+mv ~/pimpmykali.log ~/pimpmykali/
 mkdir vpn_conf; mkdir results; mkdir share; mkdir targets
 ```
 
