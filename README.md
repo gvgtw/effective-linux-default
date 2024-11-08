@@ -11,6 +11,12 @@ Default Configuration settings for fresh kali install
 6. Other Environment Customizations
 (Optional) 7. Additional Scripts to install
 
+#### Change Kali Password First
+Change Kali password
+```
+sudo passwd kali
+```
+
 #### Install pimpmykali
 ---
 ```
@@ -234,10 +240,6 @@ Set Terminator to auto open
 - Add terminator application to run on startup
   - command is "terminator"
 
-Change Kali password
-```
-sudo passwd kali
-```
 
 #### Additional Scripts to install (Optional)
 ---
