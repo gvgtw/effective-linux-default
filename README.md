@@ -249,10 +249,7 @@ Install PEASS-ng
 sudo apt install peass
 ```
 
-Install Ligolo-ng
-```
-sudo apt install ligolo-ng
-```
+Download Ligolo-ng
 ```
 cd /opt
 ```
@@ -260,34 +257,43 @@ cd /opt
 sudo mkdir ligolo-ng; cd ligolo-ng
 ```
 ```
-sudo mkdir agent_darwin_amd64; sudo mkdir agent_linux_amd64; sudo mkdir agent_windows_amd64;
+sudo mkdir agent_darwin_amd64; sudo mkdir agent_linux_amd64; sudo mkdir agent_windows_amd64; sudo mkdir proxy_linux_amd64
 ```
 ```
-sudo wget -P /opt/ligolo-ng/agent_darwin_amd64 https://github.com/nicocha30/ligolo-ng/releases/download/v0.7.2-alpha/ligolo-ng_agent_0.7.2-alpha_darwin_amd64.tar.gz
+sudo wget -P /opt/ligolo-ng/agent_darwin_amd64 https://github.com/nicocha30/ligolo-ng/releases/download/v0.7.5/ligolo-ng_agent_0.7.5_darwin_amd64.tar.gz
 ```
 ```
 cd /opt/ligolo-ng/agent_darwin_amd64/
 ```
 ```
-sudo tar -xvzf /opt/ligolo-ng/agent_darwin_amd64/ligolo-ng_agent_0.7.2-alpha_darwin_amd64.tar.gz
+sudo tar -xvzf /opt/ligolo-ng/agent_darwin_amd64/ligolo-ng_agent_0.7.5_darwin_amd64.tar.gz
 ```
 ```
-sudo wget -P /opt/ligolo-ng/agent_linux_amd64 https://github.com/nicocha30/ligolo-ng/releases/download/v0.7.2-alpha/ligolo-ng_agent_0.7.2-alpha_linux_amd64.tar.gz
+sudo wget -P /opt/ligolo-ng/agent_linux_amd64 https://github.com/nicocha30/ligolo-ng/releases/download/v0.7.5/ligolo-ng_agent_0.7.5_linux_amd64.tar.gz
 ```
 ```
 cd /opt/ligolo-ng/agent_linux_amd64/
 ```
 ```
-sudo tar -xvzf /opt/ligolo-ng/agent_linux_amd64/ligolo-ng_agent_0.7.2-alpha_linux_amd64.tar.gz 
+sudo tar -xvzf /opt/ligolo-ng/agent_linux_amd64/ligolo-ng_agent_0.7.5_linux_amd64.tar.gz
 ```
 ```
-sudo wget -P /opt/ligolo-ng/agent_windows_amd64 https://github.com/nicocha30/ligolo-ng/releases/download/v0.7.2-alpha/ligolo-ng_agent_0.7.2-alpha_windows_amd64.zip
+sudo wget -P /opt/ligolo-ng/agent_windows_amd64 https://github.com/nicocha30/ligolo-ng/releases/download/v0.7.5/ligolo-ng_agent_0.7.5_windows_amd64.zip
 ```
 ```
 cd /opt/ligolo-ng/agent_windows_amd64/
 ```
 ```
-sudo unzip /opt/ligolo-ng/agent_windows_amd64/ligolo-ng_agent_0.7.2-alpha_windows_amd64.zip
+sudo unzip /opt/ligolo-ng/agent_windows_amd64/ligolo-ng_agent_0.7.5_windows_amd64.zip
+```
+```
+sudo wget -P /opt/ligolo-ng/proxy_linux_amd64 https://github.com/nicocha30/ligolo-ng/releases/download/v0.7.5/ligolo-ng_proxy_0.7.5_linux_amd64.tar.gz
+```
+```
+cd /opt/ligolo-ng/proxy_linux_amd64/
+```
+```
+sudo tar -xvzf /opt/ligolo-ng/proxy_linux_amd64/ligolo-ng_proxy_0.7.5_linux_amd64.tar.gz 
 ```
 
 
