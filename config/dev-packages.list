@@ -3,10 +3,13 @@
 # ignored. This is the "add stuff here as you go" extension point for dev
 # tooling — add a package name, commit, and re-run install.sh to pick it up.
 # Nothing here is pentest-specific; keep it that way.
+#
+# Deliberately NOT listed here, because they're already guaranteed elsewhere
+# (apt_install() would just no-op on them, but keep this list free of dead
+# weight):
+#   - git, curl, tmux: pulled in directly by Kali's own kali-system-core /
+#     kali-linux-headless metapackages on any standard install
+#   - build-essential, jq: installed automatically by 00-pimpmykali.sh's
+#     `--autonoroot` run (pimpmykali's fix_missing/fix_ghidra steps)
 
-git
-build-essential
-curl
-tmux
-jq
 unzip
