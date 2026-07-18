@@ -1,0 +1,12 @@
+# Packages installed by modules/60-dev-tools.sh.
+# One apt package name per line. Lines starting with # (and blank lines) are
+# ignored. This is the "add stuff here as you go" extension point for dev
+# tooling — add a package name, commit, and re-run install.sh to pick it up.
+# Nothing here is pentest-specific; keep it that way.
+
+git
+build-essential
+curl
+tmux
+jq
+unzip

@@ -1,303 +1,69 @@
 # effective-kali-default
-Default Configuration settings for fresh kali install
 
-### Steps for default installation
----
-1. Install pimpmykali
-2. Install gh
-3. Set SUDO permissions for user kali
-4. Install and setup Terminator
-5. Change Terminal prompt
-6. Other Environment Customizations
-(Optional) 7. Additional Scripts to install
+An idempotent shell-script setup for building (and rebuilding) a Kali Linux VirtualBox VM exactly the way I like it — Terminator, shell, desktop, and a growing set of dev tooling.
 
-#### Change Kali Password First
-Change Kali password
+## Before you run anything
+
+Change the default password first — this is intentionally left manual, not something a public script should ever do non-interactively:
+
 ```
 sudo passwd kali
 ```
 
-#### Install pimpmykali
----
-```
-sudo apt-get update
-```
-```
-git clone https://github.com/Dewalt-arch/pimpmykali.git
-```
-```
-sudo ./pimpmykali/pimpmykali.sh
-```
-Select the N option in the Menu
+## Quickstart
 
-In the KALI-ROOT-LOGIN Installation page, select N
-```
-reboot
-```
-
-#### Install github cli
----
-```
-curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg
-
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-
-sudo apt update
-sudo apt install gh
+On a fresh Kali VM:
 
 ```
-
-#### Set SUDO permissions for user kali
----
-```
-sudo apt install -y kali-grant-root && sudo dpkg-reconfigure kali-grant-root
+curl -fsSL https://raw.githubusercontent.com/gvgtw/effective-linux-default/effective_kali/install.sh | bash
 ```
 
-select "Enable password-less privilege escalation"
+This clones the repo to `~/effective-linux-default` and runs `install.sh`. It will ask for your sudo password once and cache it for the whole run.
+
+Later, to rebuild after editing config (idempotent — safe to re-run any time, e.g. after adding a package to `config/dev-packages.list`):
 
 ```
-reboot
+cd ~/effective-linux-default && git pull && ./install.sh
 ```
 
-#### Install and setup Terminator
----
+Flags:
+- `--dry-run` — print what each module would do without changing anything
+- `--no-reboot` — skip the automatic end-of-run reboot even if one's recommended
 
-```
-sudo apt-get -y install terminator
-```
+## What it does
 
-```
-mkdir -p $HOME/.config/terminator/plugins
-```
+Runs `modules/*.sh` in order, all in one continuous pass:
 
-```
-wget https://git.io/v5Zww
-```
+| Module | Does |
+|---|---|
+| `00-pimpmykali.sh` | Clones/updates [pimpmykali](https://github.com/Dewalt-arch/pimpmykali) and runs it with `--autonoroot` (non-interactive) |
+| `01-github-cli.sh` | Installs GitHub CLI (`gh`) via the official apt repo |
+| `02-passwordless-sudo.sh` | Enables passwordless sudo via `kali-grant-root` (preseeded, non-interactive) |
+| `10-cleanup.sh` | Removes `~/Music`, `~/Videos`, `~/Templates`, `~/Public` |
+| `20-terminator.sh` | Installs Terminator and writes the final config directly (Dark-Pastel-based profile, custom keybindings/layout, theme picker plugin) |
+| `30-shell.sh` | Appends an override block to `~/.zshrc`: oneline prompt, syntax-highlight colors, `lt`/`lla` aliases |
+| `40-desktop.sh` | Wallpaper, lock-screen background, default/monospace fonts, Terminator autostart |
+| `50-guest-additions.sh` | Installs VirtualBox guest utilities (clipboard, shared folders, display resizing) |
+| `60-dev-tools.sh` | Installs whatever's listed in `config/dev-packages.list` |
 
-```
-mv v5Zww $HOME/.config/terminator/plugins/terminator-themes.py
-```
+## How it works
 
-In terminator Preferences:
-- In Global tab
-  - set "Unfocused terminal background color" to 80%
-  - set "Terminal separator size:" to 4
-- In Profiles tab
-  - General tab
-    - unset "Show titlebar"
-    - unset "Use default colors"
-  - In Colors tab
-    - unset "Use colors from system theme"
-  - In Background tab
-    - set "Solid color" 
-  - In Scrolling tab
-    - set "Scrollbar is:" to "Disabled"
-    - set Scrollback to 2000 lines
-  -  In Title Bar
-      - Unset "Use the system font", font should be "Sans Regular 9"
-      - Change colors to:
-        - Focused = White Foreground, Red Background
-        - Inactive = Black Foreground, Cream Background
-        - Receiving = White Foreground, Blue Background
-- In the Keybindings tab
-  - Change "split_horiz" to shift+atl+down
-  - Change "split_vert" to shift+alt+right
-  - Change "switch_to_tab_(1-10)" to alt+(1-10)
-- In Plugins
-  - Select CurrDirOpen
-  - Select TerminatorThemes
+- **Self-bootstrapping**: `install.sh` is the one entry point for both the first run (via `curl \| bash`) and every later rebuild. If it can't find a local `modules/` directory next to itself, it clones/pulls the repo and re-execs itself from there.
+- **Idempotent**: every module is safe to re-run. Packages are only installed if missing, config files are either fully owned/regenerated (Terminator config, autostart entry) or updated via a marker-guarded block (`.zshrc`) rather than blind `sed` patches — so re-running after a Kali update doesn't corrupt anything.
+- **One reboot, at the end**: `pimpmykali` and `kali-grant-root` both recommend a reboot, but neither blocks the rest of the script, so everything runs straight through and reboots (with a cancellable countdown) only once, at the very end — and only on a run where one of those two actually changed something. Routine "rebuild as I go" re-runs, where those two are already applied, finish with no reboot at all.
+- A failure in one module doesn't stop the rest — `install.sh` prints an OK/FAILED summary for every module at the end.
 
-Right click Terminator, and select "Themes" to open the Terminator Themes menu.
-Select and Install these themes:
-  - Batman
-  - Bim
-  - Dark Pastel
-  - FunForrest
-  - Solarized Dark High Contrast
-  - Symphonic
-  - Ubuntu
-  - WarmNeon
+## Extending it
 
-Change the Default Theme to Dark Pastel based theme
-```
-vim ~/.config/terminator/config
-```
-- Replace the values in the [[default]] theme with your preferred theme under the [[Dark Pastel]] setting.
-- Delete line 'foreground_color = "#ffffff"'
-- Change the palette value to "#000000:#ff5555:#55ff55:#ffff55:#5555ff:#b729d9:#55ff55:#bbbbbb:#555555:#ff5555:#55ff55:#ffff55:#5555ff:#b729d9:#2777ff:#ffffff"
-- In the [layouts] [[default]] [[[window0]]] section at the bottom of the config file, append the following lines:
-  - order = 0
-  - position = 120:73
-  - maximized = False
-  - fullscreen = False
-  - size = 1080, 590
+`config/dev-packages.list` is the intended place to grow dev tooling as needs become concrete — add a package name per line, commit, `git pull && ./install.sh`. It intentionally starts minimal (git, build-essential, curl, tmux, jq, unzip) rather than guessing at languages/tooling up front.
 
-#### Change Terminal Prompt and zsh defaults
----
+To add a whole new step, drop a numbered script in `modules/` (following the existing idempotency patterns in `lib/common.sh`) — `install.sh` picks up anything in that directory automatically, in numeric order.
 
-Change Terminal Prompt to better terminal prompt
-  ```
-  vim ~/.zshrc
-  ```
-  - Find "configure_prompt()" function
-    - go to line starting with "PROMPT=" under the line "oneline)"
-    - Change from - to:
-    ```
-        # From
-        PROMPT=$'${debian_chroot:+($debian_chroot)}${VIRTUAL_ENV:+($(basename $VIRTUAL_ENV))}%B%F{%(#.red.blue)}%n@%m%b%F{reset}:%B%F{$(#.blue.green)}%~%b%F{reset}%(#.#.$) '
-        # To
-        PROMPT=$'${debian_chroot:+($debian_chroot)}${VIRTUAL_ENV:+($(basename $VIRTUAL_ENV))}%B%F{red}%n'$prompt_symbol$'%m%b%F{reset}:%B%F{blue}%~ %b%F{reset}%(#.#.$) '
-    ```
-  - Find the following variables, directly under "configure_prompt()" function
-    - PROMPT_ALTERNATIVE=twoline
-      - change from twoline to oneline
-    - NEWLINE_BEFORE_PROMPT=yes
-      - change to no
-  
-  - Find and change the following lines in the "# enable syntax-highlighting" section
-    -  Change from - to:
-    ```
-      # From
-      ZSH_HIGHLIGHT_STYLES[unknown-token]=underline
-      ...
-      ZSH_HIGHLIGHT_STYLES[single-hyphen-option]=fg=green
-      ZSH_HIGHLIGHT_STYLES[double-hyphen-option]=fg=green
+## Left manual, on purpose
 
-      # To
-      ZSH_HIGHLIGHT_STYLES[unknown-token]=fg=red,bold
-      ...
-      ZSH_HIGHLIGHT_STYLES[single-hyphen-option]=fg=magenta
-      ZSH_HIGHLIGHT_STYLES[double-hyphen-option]=fg=magenta
-    ```
+- **`sudo passwd kali`** — see above.
+- **Git identity** (`git config --global user.name/user.email`) — personal values that shouldn't be hardcoded into a public script, and a curl-piped script has no interactive stdin to prompt with anyway.
 
-  - Find and change the following lines in the "# some more ls aliases" section
-    - Change from - to:
-    ```
-      # From
-      alias ll='ls -l'
-      alias la='ls -A'
-      alias l='ls -CF'
+## Out of scope (for now)
 
-      # To
-      alias ll='ls -l'
-      alias la='ls -A'
-      alias l='ls -CF'
-      alias lt='ls -lArt'
-      alias lla='la -lA'
-    ``` 
-
-#### Other Environment Customizations
----
-
-In launcher options in top left, right click drop down arrow next to "Terminal Emulator". Select "Properties", the + mark, add terminator, then move it to the top.
-
-Change font:
-- default font to "Sans Regular" size 11
-- default monospace font to "Hack Regular" size 11
-
-In firefox, add FoxyProxy and Wappalyzer extensions in the Extensions menu
-
-Clean up Kali Home Directory
-```
-rm -rf ~/Music; rm -rf ~/Videos; rm -rf ~/Templates; rm -rf ~/Public
-```
-```
-mv ~/pimpmykali.log ~/pimpmykali/
-```
-```
-mkdir vpn_conf; mkdir results; mkdir share; mkdir targets
-```
-
-Set ROCKYOU environment Variable
-```
-sudo vim /etc/environment
-```
-  - Add 'ROCKYOU="/usr/share/wordlists/rockyou.txt"' to end of file
-```
-:wq
-```
-
-Install and Change Background to kali-red-sticker.jpg and change login screen to kali-2.0-lock
-
-```
-sudo apt install kali-wallpapers-all
-
-#change login screen symbolic link
-sudo ln -fs /usr/share/backgrounds/kali-2.0/kali-2.0-lock-1920x1080.png /usr/share/desktop-base/kali-theme/login/background
-```
-
-Set Terminator to auto open
-- Open "Settings Manager"
-- Open "Session and Startup"
-- click on "Application Autostart"
-- click "+Add" option at bottom
-- Add terminator application to run on startup
-  - command is "terminator"
-
-
-#### Additional Scripts to install (Optional)
----
-
-Install PEASS-ng
-```
-sudo apt install peass
-```
-
-Download Ligolo-ng
-```
-cd /opt
-```
-```
-sudo mkdir ligolo-ng; cd ligolo-ng
-```
-```
-sudo mkdir agent_darwin_amd64; sudo mkdir agent_linux_amd64; sudo mkdir agent_windows_amd64; sudo mkdir proxy_linux_amd64
-```
-```
-sudo wget -P /opt/ligolo-ng/agent_darwin_amd64 https://github.com/nicocha30/ligolo-ng/releases/download/v0.7.5/ligolo-ng_agent_0.7.5_darwin_amd64.tar.gz
-```
-```
-cd /opt/ligolo-ng/agent_darwin_amd64/
-```
-```
-sudo tar -xvzf /opt/ligolo-ng/agent_darwin_amd64/ligolo-ng_agent_0.7.5_darwin_amd64.tar.gz
-```
-```
-sudo wget -P /opt/ligolo-ng/agent_linux_amd64 https://github.com/nicocha30/ligolo-ng/releases/download/v0.7.5/ligolo-ng_agent_0.7.5_linux_amd64.tar.gz
-```
-```
-cd /opt/ligolo-ng/agent_linux_amd64/
-```
-```
-sudo tar -xvzf /opt/ligolo-ng/agent_linux_amd64/ligolo-ng_agent_0.7.5_linux_amd64.tar.gz
-```
-```
-sudo wget -P /opt/ligolo-ng/agent_windows_amd64 https://github.com/nicocha30/ligolo-ng/releases/download/v0.7.5/ligolo-ng_agent_0.7.5_windows_amd64.zip
-```
-```
-cd /opt/ligolo-ng/agent_windows_amd64/
-```
-```
-sudo unzip /opt/ligolo-ng/agent_windows_amd64/ligolo-ng_agent_0.7.5_windows_amd64.zip
-```
-```
-sudo wget -P /opt/ligolo-ng/proxy_linux_amd64 https://github.com/nicocha30/ligolo-ng/releases/download/v0.7.5/ligolo-ng_proxy_0.7.5_linux_amd64.tar.gz
-```
-```
-cd /opt/ligolo-ng/proxy_linux_amd64/
-```
-```
-sudo tar -xvzf /opt/ligolo-ng/proxy_linux_amd64/ligolo-ng_proxy_0.7.5_linux_amd64.tar.gz 
-```
-
-
-Install Sweetpotato and Godpotato in /opt
-```
-cd /opt
-```
-```
-sudo git clone https://github.com/CCob/SweetPotato
-```
-```
-sudo git clone https://github.com/BeichenDream/GodPotato
-```
+Pentest tooling (PEASS-ng, Ligolo-ng, SweetPotato, GodPotato), the `ROCKYOU` env var, pentest engagement folders, and Firefox extensions like FoxyProxy/Wappalyzer are intentionally not part of this build — the focus right now is a general dev-work environment. Easy to bring back as a module later if that changes.
