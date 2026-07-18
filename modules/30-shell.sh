@@ -1,38 +1,32 @@
 #!/usr/bin/env bash
-# Instead of sed-patching specific lines inside Kali's default .zshrc (fragile
-# across Kali releases), redefine configure_prompt() and override the
-# variables/styles/aliases it depends on in one appended, marker-guarded
-# block at the end of the file. Function redefinition + PROMPT_ALTERNATIVE
-# reassignment + re-calling configure_prompt reproduces the README's manual
-# edits regardless of how the rest of the file is written.
+# Installs zsh and writes the final ~/.zshrc directly from config/zshrc.tpl —
+# unlike the effective_kali branch, there's no pre-existing Ubuntu .zshrc
+# structure to override, so this branch just fully owns the file (same
+# pattern as modules/20-terminator.sh).
 set -euo pipefail
 
 ZSHRC="$HOME/.zshrc"
+ZSHRC_TPL="$ELD_REPO_DIR/config/zshrc.tpl"
 
-read -r -d '' BLOCK <<'EOF' || true
-configure_prompt() {
-    prompt_symbol=㉿
-    PROMPT=$'${debian_chroot:+($debian_chroot)}${VIRTUAL_ENV:+($(basename $VIRTUAL_ENV))}%B%F{red}%n'$prompt_symbol$'%m%b%F{reset}:%B%F{blue}%~ %b%F{reset}%(#.#.$) '
-    RPROMPT=
-    unset prompt_symbol
-}
-PROMPT_ALTERNATIVE=oneline
-NEWLINE_BEFORE_PROMPT=no
-configure_prompt
-
-ZSH_HIGHLIGHT_STYLES[unknown-token]=fg=red,bold
-ZSH_HIGHLIGHT_STYLES[single-hyphen-option]=fg=magenta
-ZSH_HIGHLIGHT_STYLES[double-hyphen-option]=fg=magenta
-
-alias lt='ls -lArt'
-alias lla='la -lA'
-EOF
+apt_install zsh zsh-syntax-highlighting zsh-autosuggestions
 
 if [ "${ELD_DRY_RUN:-0}" = "1" ]; then
-    log "dry-run: ensure zsh-overrides block in $ZSHRC"
+    log "dry-run: install $ZSHRC_TPL -> $ZSHRC"
+    log "dry-run: chsh -s \$(command -v zsh) $USER (if not already the default shell)"
     exit 0
 fi
 
 backup_file "$ZSHRC"
-ensure_block_in_file "$ZSHRC" "zsh-overrides" "$BLOCK"
-log "shell: updated $ZSHRC"
+cp "$ZSHRC_TPL" "$ZSHRC"
+log "shell: wrote $ZSHRC"
+
+zsh_path="$(command -v zsh)"
+current_shell="$(getent passwd "$USER" | cut -d: -f7)"
+if [ "$current_shell" = "$zsh_path" ]; then
+    log "shell: $USER's default shell is already zsh, skipping chsh"
+else
+    # Run through sudo, not a plain `chsh` — chsh on your own account prompts
+    # for your password via PAM; sudo (already cached for this run) avoids it.
+    sudo chsh -s "$zsh_path" "$USER"
+    log "shell: set $USER's default shell to $zsh_path (takes effect next login)"
+fi

@@ -1,27 +1,34 @@
 #!/usr/bin/env bash
-# Enables passwordless sudo via kali-grant-root, reproducing the manual
-# "select Enable password-less privilege escalation" debconf prompt
-# non-interactively. Checks /etc/group directly (not the current session's
-# cached group list) so it's accurate even before the reboot/relogin that
-# would normally refresh group membership.
+# Functional equivalent of Kali's kali-grant-root, since Ubuntu has no
+# equivalent package: a NOPASSWD sudoers.d entry for the current user.
+# Applies immediately, no reboot needed. Always validated with `visudo -c`
+# BEFORE it's ever copied into /etc/sudoers.d/ — a broken file there can
+# lock sudo out entirely, so an invalid fragment is discarded, never
+# installed.
 set -euo pipefail
 
-apt_install kali-grant-root
-
-current_members="$(getent group kali-trusted | cut -d: -f4)"
-if [ "${ELD_DRY_RUN:-0}" != "1" ] && echo ",${current_members}," | grep -q ",${USER},"; then
-    log "passwordless-sudo: $USER already in kali-trusted, skipping"
-    exit 0
-fi
+SUDOERS_FILE="/etc/sudoers.d/effective-ubuntu-nopasswd"
+EXPECTED_CONTENT="$USER ALL=(ALL) NOPASSWD:ALL"
 
 if [ "${ELD_DRY_RUN:-0}" = "1" ]; then
-    log "dry-run: preseed kali-grant-root/policy=enable and dpkg-reconfigure"
+    log "dry-run: validate and install $SUDOERS_FILE granting $USER passwordless sudo"
     exit 0
 fi
 
-log "passwordless-sudo: enabling via kali-grant-root"
-echo "kali-grant-root kali-grant-root/policy select enable" | sudo debconf-set-selections
-sudo DEBIAN_FRONTEND=noninteractive dpkg-reconfigure kali-grant-root
+if [ -f "$SUDOERS_FILE" ] && [ "$(cat "$SUDOERS_FILE")" = "$EXPECTED_CONTENT" ]; then
+    log "passwordless-sudo: $SUDOERS_FILE already in place, skipping"
+    exit 0
+fi
 
-mark_needs_reboot
-log "passwordless-sudo: done"
+TMP_SUDOERS="$(mktemp)"
+printf '%s\n' "$EXPECTED_CONTENT" >"$TMP_SUDOERS"
+
+if ! sudo visudo -c -f "$TMP_SUDOERS" >/dev/null 2>&1; then
+    log "passwordless-sudo: WARNING - generated sudoers fragment failed visudo validation, NOT installing it"
+    rm -f "$TMP_SUDOERS"
+    exit 1
+fi
+
+sudo install -o root -g root -m 0440 "$TMP_SUDOERS" "$SUDOERS_FILE"
+rm -f "$TMP_SUDOERS"
+log "passwordless-sudo: installed $SUDOERS_FILE"

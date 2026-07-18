@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# effective-linux-default — Kali provisioning script.
+# effective-linux-default — Ubuntu provisioning script.
 #
-# First run (fresh Kali install, after changing the default password):
-#   curl -fsSL https://raw.githubusercontent.com/gvgtw/effective-linux-default/effective_kali/install.sh | bash
+# First run (fresh Ubuntu 24.04 install):
+#   curl -fsSL https://raw.githubusercontent.com/gvgtw/effective-linux-default/effective_ubuntu/install.sh | bash
 #
 # Later, to rebuild after editing config (idempotent, safe to re-run):
 #   cd ~/effective-linux-default && git pull && ./install.sh
@@ -13,7 +13,7 @@
 set -euo pipefail
 
 REPO_URL="https://github.com/gvgtw/effective-linux-default.git"
-REPO_BRANCH="effective_kali"
+REPO_BRANCH="effective_ubuntu"
 DEFAULT_CLONE_DIR="$HOME/effective-linux-default"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd || echo "")"
@@ -78,7 +78,7 @@ done
 
 if [ -f "$ELD_REBOOT_MARKER" ]; then
     if [ "$ELD_NO_REBOOT" = "1" ] || [ "$ELD_DRY_RUN" = "1" ]; then
-        log "Reboot recommended to finalize changes (pimpmykali / passwordless sudo)."
+        log "Reboot recommended to finalize changes."
         log "Run again without --no-reboot, or 'sudo reboot' manually, then 'rm $ELD_REBOOT_MARKER'."
     else
         log "All done. Rebooting in 10s to finalize changes — press Ctrl+C to cancel."
