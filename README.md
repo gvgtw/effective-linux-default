@@ -1,12 +1,69 @@
-# effective-linux-default
-Default Configuration settings for fresh Ubuntu install
+# effective-kali-default
+Default Configuration settings for fresh kali install
 
 ### Steps for default installation
 ---
-1. Install and setup Terminator
-2. Change Terminal prompt
-3. Other Environment Customizations
-(Optional) 4. Additional Scripts to install
+1. Install pimpmykali
+2. Install AutoRecon
+3. Set SUDO permissions for user kali
+4. Install and setup Terminator
+5. Change Terminal prompt
+6. Other Environment Customizations
+(Optional) 7. Additional Scripts to install
+
+#### Change Kali Password First
+Change Kali password
+```
+sudo passwd kali
+```
+
+#### Install pimpmykali
+---
+```
+sudo apt-get update
+```
+```
+git clone https://github.com/Dewalt-arch/pimpmykali.git
+```
+```
+sudo ./pimpmykali/pimpmykali.sh
+```
+Select the N option in the Menu
+
+In the KALI-ROOT-LOGIN Installation page, select N
+```
+reboot
+```
+
+#### Install AutoRecon
+---
+```
+sudo apt install seclists curl dnsrecon enum4linux feroxbuster gobuster impacket-scripts nbtscan nikto nmap onesixtyone oscanner redis-tools smbclient smbmap snmp sslscan sipvicious tnscmd10g whatweb wkhtmltopdf
+```
+```
+sudo apt install python3-venv
+```
+```
+python3 -m pip install --user pipx
+```
+```
+python3 -m pipx ensurepath
+```
+```
+pipx install git+https://github.com/Tib3rius/AutoRecon.git
+```
+
+#### Set SUDO permissions for user kali
+---
+```
+sudo apt install -y kali-grant-root && sudo dpkg-reconfigure kali-grant-root
+```
+
+select "Enable password-less privilege escalation"
+
+```
+reboot
+```
 
 #### Install and setup Terminator
 ---
