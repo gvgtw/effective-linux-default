@@ -4,7 +4,7 @@ Default Configuration settings for fresh kali install
 ### Steps for default installation
 ---
 1. Install pimpmykali
-2. Install AutoRecon
+2. Install gh
 3. Set SUDO permissions for user kali
 4. Install and setup Terminator
 5. Change Terminal prompt
@@ -35,22 +35,16 @@ In the KALI-ROOT-LOGIN Installation page, select N
 reboot
 ```
 
-#### Install AutoRecon
+#### Install github cli
 ---
 ```
-sudo apt install seclists curl dnsrecon enum4linux feroxbuster gobuster impacket-scripts nbtscan nikto nmap onesixtyone oscanner redis-tools smbclient smbmap snmp sslscan sipvicious tnscmd10g whatweb wkhtmltopdf
-```
-```
-sudo apt install python3-venv
-```
-```
-python3 -m pip install --user pipx
-```
-```
-python3 -m pipx ensurepath
-```
-```
-pipx install git+https://github.com/Tib3rius/AutoRecon.git
+curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg
+
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+
+sudo apt update
+sudo apt install gh
+
 ```
 
 #### Set SUDO permissions for user kali
