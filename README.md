@@ -64,6 +64,3 @@ To add a whole new step, drop a numbered script in `modules/` (following the exi
 - **`sudo passwd kali`** — see above.
 - **Git identity** (`git config --global user.name/user.email`) — personal values that shouldn't be hardcoded into a public script, and a curl-piped script has no interactive stdin to prompt with anyway.
 
-## Out of scope (for now)
-
-Pentest tooling (PEASS-ng, Ligolo-ng, SweetPotato, GodPotato), the `ROCKYOU` env var, pentest engagement folders, and Firefox extensions like FoxyProxy/Wappalyzer are intentionally not part of this build — the focus right now is a general dev-work environment. Easy to bring back as a module later if that changes.
