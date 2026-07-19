@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Functional equivalent of Kali's kali-grant-root, since Ubuntu has no
+# Functional equivalent of Kali's kali-grant-root, since Pop!_OS has no
 # equivalent package: a NOPASSWD sudoers.d entry for the current user.
 # Applies immediately, no reboot needed. Always validated with `visudo -c`
 # BEFORE it's ever copied into /etc/sudoers.d/ — a broken file there can
@@ -7,12 +7,21 @@
 # installed.
 set -euo pipefail
 
-SUDOERS_FILE="/etc/sudoers.d/effective-ubuntu-nopasswd"
+SUDOERS_FILE="/etc/sudoers.d/effective-linux-default-nopasswd"
+# Written by earlier revisions of this branch, back when it targeted stock
+# Ubuntu. Left in place it'd be a second, redundant NOPASSWD grant.
+LEGACY_SUDOERS_FILE="/etc/sudoers.d/effective-ubuntu-nopasswd"
 EXPECTED_CONTENT="$USER ALL=(ALL) NOPASSWD:ALL"
 
 if [ "${ELD_DRY_RUN:-0}" = "1" ]; then
+    log "dry-run: remove $LEGACY_SUDOERS_FILE if present"
     log "dry-run: validate and install $SUDOERS_FILE granting $USER passwordless sudo"
     exit 0
+fi
+
+if [ -f "$LEGACY_SUDOERS_FILE" ]; then
+    sudo rm -f "$LEGACY_SUDOERS_FILE"
+    log "passwordless-sudo: removed legacy $LEGACY_SUDOERS_FILE"
 fi
 
 if [ -f "$SUDOERS_FILE" ] && [ "$(cat "$SUDOERS_FILE")" = "$EXPECTED_CONTENT" ]; then

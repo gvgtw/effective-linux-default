@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# effective-linux-default — Ubuntu provisioning script.
+# effective-linux-default — Pop!_OS provisioning script.
 #
-# First run (fresh Ubuntu 24.04 install):
-#   curl -fsSL https://raw.githubusercontent.com/gvgtw/effective-linux-default/effective_ubuntu/install.sh | bash
+# First run (fresh Pop!_OS 22.04 LTS install):
+#   curl -fsSL https://raw.githubusercontent.com/gvgtw/effective-linux-default/effective_popos/install.sh | bash
 #
 # Later, to rebuild after editing config (idempotent, safe to re-run):
 #   cd ~/effective-linux-default && git pull && ./install.sh
@@ -13,7 +13,7 @@
 set -euo pipefail
 
 REPO_URL="https://github.com/gvgtw/effective-linux-default.git"
-REPO_BRANCH="effective_ubuntu"
+REPO_BRANCH="effective_popos"
 DEFAULT_CLONE_DIR="$HOME/effective-linux-default"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd || echo "")"

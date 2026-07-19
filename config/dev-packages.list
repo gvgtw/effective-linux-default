@@ -6,8 +6,8 @@
 #
 # Unlike the effective_kali branch, these all need to be listed explicitly:
 # there's no pimpmykali-equivalent doing a bunch of installs for free on
-# Ubuntu, and git/curl/build-essential are confirmed NOT preinstalled on
-# Ubuntu 24.04 Desktop.
+# Pop!_OS, and git/curl/build-essential are confirmed NOT preinstalled on
+# a stock Pop!_OS 22.04 desktop install.
 
 git
 curl
