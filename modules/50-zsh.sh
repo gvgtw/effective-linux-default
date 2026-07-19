@@ -18,11 +18,13 @@ ZSHRC="$HOME/.zshrc"
 OMZ_DIR="$HOME/.oh-my-zsh"
 OMZ_CUSTOM="${ZSH_CUSTOM:-$OMZ_DIR/custom}"
 OMZ_INSTALL_URL="https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh"
+OMZ_THEME="clean"
 
 apt_install zsh git curl
 
 if [ "${ELD_DRY_RUN:-0}" = "1" ]; then
     log "dry-run: install Oh My Zsh (unattended) into $OMZ_DIR"
+    log "dry-run: set ZSH_THEME=\"$OMZ_THEME\" in $ZSHRC"
     log "dry-run: clone zsh-autosuggestions and zsh-syntax-highlighting into $OMZ_CUSTOM/plugins"
     log "dry-run: ensure eld block in $ZSHRC (plugin sourcing + ~/.local/bin on PATH)"
     log "dry-run: chsh -s \$(command -v zsh) $USER (if not already the default shell)"
@@ -45,10 +47,28 @@ else
     RUNZSH=no CHSH=no sh -c "$(curl -fsSL "$OMZ_INSTALL_URL")" "" --unattended
 fi
 
+# --- theme ------------------------------------------------------------------
+# ZSH_THEME has to be set *before* `source $ZSH/oh-my-zsh.sh` runs, so this is
+# the one line in .zshrc we edit in place — appending it in the block at the
+# bottom would be too late to have any effect. The installer's template always
+# writes a ZSH_THEME line; the else-branch covers a .zshrc that somehow lacks
+# one, prepending it so it still lands ahead of the source line.
+current_theme="$(sed -n 's/^ZSH_THEME=["'\'']\{0,1\}\([^"'\'']*\)["'\'']\{0,1\}.*/\1/p' "$ZSHRC" | head -n 1)"
+if [ "$current_theme" = "$OMZ_THEME" ]; then
+    log "shell: ZSH_THEME already \"$OMZ_THEME\", leaving it"
+elif [ -n "$current_theme" ]; then
+    sed -i "s|^ZSH_THEME=.*|ZSH_THEME=\"$OMZ_THEME\"|" "$ZSHRC"
+    log "shell: set ZSH_THEME \"$current_theme\" -> \"$OMZ_THEME\""
+else
+    sed -i "1i ZSH_THEME=\"$OMZ_THEME\"" "$ZSHRC"
+    log "shell: no ZSH_THEME line found, added ZSH_THEME=\"$OMZ_THEME\""
+fi
+
 # --- plugins ----------------------------------------------------------------
 # Neither ships inside Oh My Zsh, so they're cloned into ZSH_CUSTOM. They get
-# sourced explicitly in the block below rather than added to the plugins=()
-# array, which would mean sed-ing a line inside a file we don't own.
+# sourced explicitly in the block at the bottom rather than added to the
+# plugins=() array, since appending is more robust than rewriting an array
+# whose contents we don't control.
 clone_plugin() {
     local name="$1" url="$2" dest="$OMZ_CUSTOM/plugins/$1"
     if [ -d "$dest/.git" ]; then

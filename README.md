@@ -40,8 +40,8 @@ Runs `modules/*.sh` in numeric order, in one continuous pass:
 | `15-github-cli.sh` | GitHub CLI (`gh`) from the official apt repo |
 | `20-gh-auth.sh` | Asks whether to authenticate now; if yes, runs `gh auth login` so you can paste a PAT |
 | `30-xdg-cleanup.sh` | Removes `~/Music`, `~/Videos`, `~/Templates`, `~/Public` — and stops GNOME recreating them |
-| `40-terminator.sh` | Installs Terminator |
-| `50-zsh.sh` | zsh + Oh My Zsh, with autosuggestions and syntax highlighting; makes zsh your default shell |
+| `40-terminator.sh` | Installs Terminator and applies the keybindings in `config/terminator-keybindings.conf` |
+| `50-zsh.sh` | zsh + Oh My Zsh (`clean` theme) with autosuggestions and syntax highlighting; makes zsh your default shell |
 | `60-desktop.sh` | Default/monospace fonts, Terminator autostart |
 | `70-guest-additions.sh` | VirtualBox Guest Additions from the host's ISO — clipboard, shared folders, display resizing |
 | `80-dev-packages.sh` | Everything in `config/dev-packages.list` |
@@ -59,12 +59,15 @@ Runs `modules/*.sh` in numeric order, in one continuous pass:
 
 ## Extending it
 
-Two list files are the intended growth points — add a line, commit, `git pull && ./install.sh`:
+Three config files are the intended growth points — edit, commit, `git pull && ./install.sh`:
 
 - `config/dev-packages.list` — apt packages
 - `config/vscode-extensions.list` — VS Code extension IDs (`code --list-extensions` dumps what you have)
+- `config/terminator-keybindings.conf` — Terminator keybindings
 
-Both start minimal on purpose rather than guessing at languages and toolchains up front.
+The two `.list` files start minimal on purpose rather than guessing at languages and toolchains up front.
+
+**Terminator is only partly managed, deliberately.** The script owns the `[keybindings]` section of `~/.config/terminator/config` and nothing else — so colors, fonts, profiles and layouts you set through Preferences survive re-runs untouched. Once you've settled on the rest, the natural next step is to promote whichever sections you care about into a config file the same way.
 
 For anything bigger, drop a numbered script in `modules/` — `install.sh` picks it up automatically. Use the helpers in `lib/common.sh` (`apt_install`, `ensure_block_in_file`, `backup_file`, `read_list_file`, `mark_needs_reboot`, `log`) so it inherits the same idempotency and dry-run behavior as everything else.
 
