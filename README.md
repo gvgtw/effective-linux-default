@@ -43,7 +43,7 @@ Runs `modules/*.sh` in numeric order, in one continuous pass:
 | `40-terminator.sh` | Installs Terminator and applies the keybindings in `config/terminator-keybindings.conf` |
 | `50-zsh.sh` | zsh + Oh My Zsh (`clean` theme) with autosuggestions and syntax highlighting; makes zsh your default shell |
 | `60-desktop.sh` | Default/monospace fonts, Terminator autostart |
-| `70-guest-additions.sh` | VirtualBox Guest Additions from the host's ISO — clipboard, shared folders, display resizing |
+| `70-guest-additions.sh` | VirtualBox Guest Additions from the host's ISO — clipboard, shared folders, display resizing. Mounts the disc itself; prompts you to insert it only if it isn't attached |
 | `80-dev-packages.sh` | Everything in `config/dev-packages.list` |
 | `85-dev-directory.sh` | Creates `~/Dev`, the intended root for projects |
 | `90-vscode.sh` | VS Code from Microsoft's apt repo, plus everything in `config/vscode-extensions.list` |
@@ -75,6 +75,10 @@ For anything bigger, drop a numbered script in `modules/` — `install.sh` picks
 
 - **Git identity** (`git config --global user.name/user.email`) — personal values that don't belong hardcoded in a public script, and a curl-piped script has no interactive stdin to prompt with anyway.
 - **Claude Code login** — the CLI installs automatically, but logging in is an interactive browser OAuth flow. Run `claude` from `~/Dev` afterward.
-- **Inserting the Guest Additions CD image** — from the VirtualBox menu: Devices → Insert Guest Additions CD image. The script installs from that ISO rather than from apt, because the ISO always matches your host's VirtualBox version, while apt's copy is old enough to break display resizing and clipboard. If the ISO isn't mounted the module says so and exits cleanly — insert it and re-run.
+- **Inserting the Guest Additions CD image** — from the VirtualBox menu: Devices → Insert Guest Additions CD image. Attaching a virtual CD is a host-side action, and a guest has no way to request it, so this is the one step that can need a hand.
+
+  The script does everything else itself: it uses the disc if your desktop already auto-mounted it, mounts it itself if it's attached but unmounted, and only asks if it genuinely isn't there — then re-checks each time you confirm, so you never have to restart the run. Press `s` at that prompt to skip the step entirely.
+
+  It installs from the ISO rather than from apt because the ISO always matches your host's VirtualBox version, while apt's copy is old enough to break display resizing and clipboard sharing.
 
 GitHub auth is the one interactive step that runs inline, and it asks first. It reads from `/dev/tty` so it works even under `curl | bash`, and skips itself entirely if you're already logged in.

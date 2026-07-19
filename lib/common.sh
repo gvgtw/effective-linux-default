@@ -100,6 +100,14 @@ have_cmd() {
     command -v "$1" >/dev/null 2>&1
 }
 
+# have_tty — true when we can actually prompt the user.
+# `[ -r /dev/tty ]` is not enough: the device node is readable even when the
+# process has no controlling terminal, and the open then fails with ENXIO.
+# Actually opening it is the only reliable test.
+have_tty() {
+    (: </dev/tty) 2>/dev/null
+}
+
 # read_list_file <file> — prints one entry per line from a simple list file,
 # stripping "#" comments and surrounding whitespace and skipping blanks.
 # Backs the config/*.list extension points (dev packages, VS Code extensions).

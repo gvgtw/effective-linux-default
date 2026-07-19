@@ -16,7 +16,7 @@ if [ "${ELD_DRY_RUN:-0}" = "1" ]; then
     exit 0
 fi
 
-if [ ! -r /dev/tty ]; then
+if ! have_tty; then
     log "gh-auth: no interactive terminal available, skipping — run 'gh auth login' manually later"
     exit 0
 fi
