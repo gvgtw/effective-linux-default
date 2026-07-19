@@ -21,6 +21,16 @@ if [ ! -r /dev/tty ]; then
     exit 0
 fi
 
-log "gh-auth: launching 'gh auth login' — choose GitHub.com, HTTPS, then 'Paste an authentication token' and paste your fine-grained PAT"
-gh auth login </dev/tty
-log "gh-auth: done"
+reply=""
+read -r -p "Would you like to complete GitHub authentication now? [y/N] " reply </dev/tty || reply=""
+
+case "$reply" in
+    [Yy]*)
+        log "gh-auth: launching 'gh auth login' — choose GitHub.com, HTTPS, then 'Paste an authentication token' and paste your fine-grained PAT"
+        gh auth login </dev/tty
+        log "gh-auth: done"
+        ;;
+    *)
+        log "gh-auth: skipped by user — run 'gh auth login' manually whenever you're ready"
+        ;;
+esac

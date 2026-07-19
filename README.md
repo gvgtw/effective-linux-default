@@ -36,10 +36,9 @@ Runs `modules/*.sh` in order, all in one continuous pass:
 
 | Module | Does |
 |---|---|
-| `00-pimpmykali.sh` | Clones/updates [pimpmykali](https://github.com/Dewalt-arch/pimpmykali) and runs it with `--autonoroot` (non-interactive) |
 | `01-github-cli.sh` | Installs GitHub CLI (`gh`) via the official apt repo |
 | `02-passwordless-sudo.sh` | Enables passwordless sudo via `kali-grant-root` (preseeded, non-interactive) |
-| `03-gh-auth.sh` | Runs `gh auth login` interactively — paste your fine-grained PAT when prompted (skipped if already authenticated) |
+| `03-gh-auth.sh` | Asks whether you want to authenticate now; if yes, runs `gh auth login` interactively — paste your fine-grained PAT when prompted (skipped entirely if already authenticated) |
 | `10-cleanup.sh` | Removes `~/Music`, `~/Videos`, `~/Templates`, `~/Public` |
 | `20-terminator.sh` | Installs Terminator and writes the final config directly (Dark-Pastel-based profile, custom keybindings/layout, theme picker plugin) |
 | `30-shell.sh` | Appends an override block to `~/.zshrc`: oneline prompt, syntax-highlight colors, `lt`/`lla` aliases |
@@ -48,6 +47,7 @@ Runs `modules/*.sh` in order, all in one continuous pass:
 | `60-dev-tools.sh` | Installs whatever's listed in `config/dev-packages.list` |
 | `65-dev-directory.sh` | Creates `~/Dev` — the intended root for all dev projects and where Claude Code is meant to run from |
 | `70-claude-code.sh` | Installs the Claude Code CLI via the native installer (updates it if already installed) |
+| `90-pimpmykali.sh` | Clones/updates [pimpmykali](https://github.com/Dewalt-arch/pimpmykali) and runs it with `--autonoroot` (non-interactive). Runs **last** on purpose — its changes destabilise the running terminal, so everything else finishes first, then it runs and the script reboots |
 
 ## How it works
 
@@ -58,7 +58,7 @@ Runs `modules/*.sh` in order, all in one continuous pass:
 
 ## Extending it
 
-`config/dev-packages.list` is the intended place to grow dev tooling as needs become concrete — add a package name per line, commit, `git pull && ./install.sh`. It intentionally starts minimal (just `unzip`) rather than guessing at languages/tooling up front — see the comments in the file for why `git`/`curl`/`tmux`/`build-essential`/`jq` aren't listed (they're already guaranteed by Kali's own metapackages or by `00-pimpmykali.sh`, so listing them again would just be dead weight).
+`config/dev-packages.list` is the intended place to grow dev tooling as needs become concrete — add a package name per line, commit, `git pull && ./install.sh`. It intentionally starts minimal (just `unzip`) rather than guessing at languages/tooling up front — see the comments in the file for why `git`/`curl`/`tmux`/`build-essential`/`jq` aren't listed (they're already guaranteed by Kali's own metapackages or by `90-pimpmykali.sh`, so listing them again would just be dead weight).
 
 To add a whole new step, drop a numbered script in `modules/` (following the existing idempotency patterns in `lib/common.sh`) — `install.sh` picks up anything in that directory automatically, in numeric order.
 
@@ -68,5 +68,5 @@ To add a whole new step, drop a numbered script in `modules/` (following the exi
 - **Git identity** (`git config --global user.name/user.email`) — personal values that shouldn't be hardcoded into a public script, and a curl-piped script has no interactive stdin to prompt with anyway.
 - **Claude Code login** — `70-claude-code.sh` installs the CLI, but logging in is an interactive browser OAuth flow; run `claude` from `~/Dev` (or a project under it) afterward to authenticate.
 
-`03-gh-auth.sh` is the one exception: it's genuinely interactive (`gh auth login`, paste your fine-grained PAT when prompted) but still runs as part of the script rather than being left to the user, since that's what was asked for. It reads from `/dev/tty` explicitly so it still works when `install.sh` was invoked via `curl | bash` (where stdin is the pipe, not a terminal), and skips itself entirely if `gh auth status` already shows you're logged in.
+`03-gh-auth.sh` is the one exception: it's genuinely interactive (`gh auth login`, paste your fine-grained PAT when prompted) but still runs as part of the script rather than being left to the user, since that's what was asked for. It prompts you first (`Would you like to complete GitHub authentication now? [y/N]`) and only launches the login flow if you say yes. It reads from `/dev/tty` explicitly so it still works when `install.sh` was invoked via `curl | bash` (where stdin is the pipe, not a terminal), and skips itself entirely if `gh auth status` already shows you're logged in.
 
