@@ -5,16 +5,11 @@
 set -euo pipefail
 
 PACKAGES_LIST="$ELD_REPO_DIR/config/dev-packages.list"
-packages=()
 
-while IFS= read -r line; do
-    line="${line%%#*}"
-    line="$(echo "$line" | xargs)" # trim whitespace
-    [ -n "$line" ] && packages+=("$line")
-done <"$PACKAGES_LIST"
+mapfile -t packages < <(read_list_file "$PACKAGES_LIST")
 
 if [ "${#packages[@]}" -eq 0 ]; then
-    log "dev-tools: no packages listed in $PACKAGES_LIST"
+    log "dev-packages: nothing listed in $PACKAGES_LIST"
     exit 0
 fi
 

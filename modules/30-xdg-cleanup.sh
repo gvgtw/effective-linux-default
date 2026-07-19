@@ -4,9 +4,8 @@
 # Deleting the directories is not enough on its own. xdg-user-dirs-update
 # runs at every login (/etc/xdg/autostart/xdg-user-dirs.desktop) and recreates
 # anything still pointed at a real subdirectory in ~/.config/user-dirs.dirs,
-# so on a stock install these four came straight back at the next login. The
-# fix is to repoint them at $HOME first — which is exactly what Kali already
-# ships, and why this module appeared to work there and not here.
+# so deleting them alone means they're all back at the next login. The fix is
+# to repoint the four entries at $HOME first, then delete.
 #
 # Only these four are touched; Desktop/Downloads/Documents/Pictures keep
 # their normal managed directories.

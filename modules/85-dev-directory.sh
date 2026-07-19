@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ~/Dev is where all dev projects live, and the intended working directory
-# for Claude Code (see modules/70-claude-code.sh) — Claude Code itself has no
+# for Claude Code (see modules/95-claude-code.sh) — Claude Code itself has no
 # configurable default working directory, so this is just the conventional
 # project root the user cd's into.
 set -euo pipefail

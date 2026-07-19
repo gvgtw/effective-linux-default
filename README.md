@@ -1,75 +1,77 @@
-# effective-popos-default
+# effective-linux-default
 
-An idempotent shell-script setup for building (and rebuilding) a Pop!_OS VirtualBox VM exactly the way I like it — Terminator, zsh, desktop, and a growing set of dev tooling. Sibling to the `effective_kali` branch, ported for Pop!_OS.
+A single script that turns a fresh Pop!_OS VirtualBox VM into a ready-to-use development environment — Terminator, zsh, VS Code, GitHub CLI, and Claude Code — and that stays safe to re-run as your tooling grows.
 
-Targets **Pop!_OS 22.04 LTS**, which is built on Ubuntu 22.04 ("Jammy Jellyfish") and reports `jammy` as its codename — that's what the apt repo setup keys off. Unlike Kali's rolling release, package availability varies meaningfully by release, so this is written and checked against 22.04 specifically.
+Built for spinning up contained VMs to code and experiment in, without hand-configuring the same twelve things every time.
+
+## Requirements
+
+**Pop!_OS 22.04 LTS**, running in Oracle VirtualBox.
+
+Grab the 22.04 ISO specifically — [System76's download page](https://system76.com/pop/download/) defaults to 24.04 now. 24.04 ships the COSMIC desktop, which has an [open bug where automatic screen resizing doesn't work inside a VM](https://github.com/pop-os/cosmic-epoch/issues/1351), and its config format is different enough that the desktop settings in this script wouldn't apply.
 
 ## Quickstart
 
-On a fresh Pop!_OS 22.04 install:
+On a fresh VM:
 
 ```
-curl -fsSL https://raw.githubusercontent.com/gvgtw/effective-linux-default/effective_popos/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/gvgtw/effective-linux-default/main/install.sh | bash
 ```
 
-This clones the repo to `~/effective-linux-default` and runs `install.sh`. It will ask for your sudo password once and cache it for the whole run.
+This clones the repo to `~/effective-linux-default` and runs it. You'll be asked for your sudo password, then whether you want to authenticate with GitHub — both in the first few seconds, so you can answer and walk away. The run ends with a single reboot if one is needed.
 
-Later, to rebuild after editing config (idempotent — safe to re-run any time, e.g. after adding a package to `config/dev-packages.list`):
+To rebuild later — after adding a package, an extension, or a whole new module:
 
 ```
 cd ~/effective-linux-default && git pull && ./install.sh
 ```
 
 Flags:
-- `--dry-run` — print what each module would do without changing anything
-- `--no-reboot` — skip the automatic end-of-run reboot even if one's recommended
+- `--dry-run` — print what each module would do, change nothing
+- `--no-reboot` — skip the end-of-run reboot even if one's recommended
 
 ## What it does
 
-Runs `modules/*.sh` in order, all in one continuous pass:
+Runs `modules/*.sh` in numeric order, in one continuous pass:
 
 | Module | Does |
 |---|---|
-| `01-github-cli.sh` | Installs GitHub CLI (`gh`) via the official apt repo |
-| `02-passwordless-sudo.sh` | Grants passwordless sudo via a `visudo`-validated `/etc/sudoers.d/` entry |
-| `03-gh-auth.sh` | Asks whether you want to authenticate now; if yes, runs `gh auth login` interactively — paste your fine-grained PAT when prompted (skipped entirely if already authenticated) |
-| `10-cleanup.sh` | Removes `~/Music`, `~/Videos`, `~/Templates`, `~/Public` — and repoints them at `$HOME` in `user-dirs.dirs` so GNOME doesn't recreate them |
-| `20-terminator.sh` | Installs Terminator, stock config |
-| `30-shell.sh` | Installs zsh + Oh My Zsh (stock theme/plugins) with `zsh-autosuggestions` and `zsh-syntax-highlighting`, then makes zsh the default shell |
-| `40-desktop.sh` | Default/monospace fonts (via `gsettings`, plus `fonts-hack`), Terminator autostart |
-| `50-guest-additions.sh` | Installs VirtualBox Guest Additions from the host's ISO (clipboard, shared folders, display resizing) |
-| `60-dev-tools.sh` | Installs whatever's listed in `config/dev-packages.list` |
-| `65-dev-directory.sh` | Creates `~/Dev` — the intended root for all dev projects and where Claude Code is meant to run from |
-| `70-claude-code.sh` | Installs the Claude Code CLI via the native installer (updates it if already installed) |
+| `10-passwordless-sudo.sh` | Passwordless sudo via a `visudo`-validated `/etc/sudoers.d/` fragment |
+| `15-github-cli.sh` | GitHub CLI (`gh`) from the official apt repo |
+| `20-gh-auth.sh` | Asks whether to authenticate now; if yes, runs `gh auth login` so you can paste a PAT |
+| `30-xdg-cleanup.sh` | Removes `~/Music`, `~/Videos`, `~/Templates`, `~/Public` — and stops GNOME recreating them |
+| `40-terminator.sh` | Installs Terminator |
+| `50-zsh.sh` | zsh + Oh My Zsh, with autosuggestions and syntax highlighting; makes zsh your default shell |
+| `60-desktop.sh` | Default/monospace fonts, Terminator autostart |
+| `70-guest-additions.sh` | VirtualBox Guest Additions from the host's ISO — clipboard, shared folders, display resizing |
+| `80-dev-packages.sh` | Everything in `config/dev-packages.list` |
+| `85-dev-directory.sh` | Creates `~/Dev`, the intended root for projects |
+| `90-vscode.sh` | VS Code from Microsoft's apt repo, plus everything in `config/vscode-extensions.list` |
+| `95-claude-code.sh` | Claude Code CLI via the native installer (updates it if already present) |
 
 ## How it works
 
-- **Self-bootstrapping**: `install.sh` is the one entry point for both the first run (via `curl \| bash`) and every later rebuild. If it can't find a local `modules/` directory next to itself, it clones/pulls the repo and re-execs itself from there.
-- **Idempotent**: every module is safe to re-run. Packages are only installed if missing; config files are either fully owned/regenerated (autostart entry), updated via a marker-guarded block (`.zshrc`), or written only after validation (the sudoers fragment) — so re-running never corrupts anything.
-- **`~/.zshrc` is not ours.** Oh My Zsh writes it on first install and this branch never overwrites it afterwards; our additions go in a marker-guarded block appended at the end. That matters because the Claude Code installer appends its own `PATH` line to the same file — a module that rewrote `.zshrc` wholesale would silently delete it on the second rebuild.
-- **One reboot, at the end, only if needed**: the sudoers change applies immediately and `chsh` takes effect at next login, so most runs need no reboot. Guest Additions is the exception — it builds kernel modules, so a run that installs it flags a reboot and `install.sh` does it once at the very end with a cancellable countdown.
-- A failure in one module doesn't stop the rest — `install.sh` prints an OK/FAILED summary for every module at the end.
+- **One entry point.** `install.sh` handles both the first `curl | bash` run and every rebuild. If it can't find a `modules/` directory next to itself, it clones the repo and re-execs from there.
+- **Idempotent throughout.** Packages install only when missing. Config files are either fully owned and regenerated, updated through a marker-guarded block, or written only after validation. Re-running is a normal thing to do, not a risk.
+- **`~/.zshrc` belongs to Oh My Zsh, not to this script.** Our additions go in a marker-guarded block appended at the end. This matters: the Claude Code installer appends its own `PATH` line to that same file, and a script that rewrote `.zshrc` wholesale would silently delete it on the second run.
+- **At most one reboot, at the very end.** Modules that need one set a marker instead of rebooting mid-run, and `install.sh` reboots once at the end with a cancellable countdown. Rebuilds where nothing new changed don't reboot at all.
+- **One module failing doesn't stop the rest.** You get an OK/FAILED summary for every module at the end.
 
 ## Extending it
 
-`config/dev-packages.list` is the intended place to grow dev tooling as needs become concrete — add a package name per line, commit, `git pull && ./install.sh`. Unlike the Kali branch, this list has to carry more of its own weight: there's no `pimpmykali`-equivalent quietly installing things for you, and `git`/`curl`/`build-essential` are **not** preinstalled.
+Two list files are the intended growth points — add a line, commit, `git pull && ./install.sh`:
 
-To add a whole new step, drop a numbered script in `modules/` (following the existing idempotency patterns in `lib/common.sh`) — `install.sh` picks up anything in that directory automatically, in numeric order.
+- `config/dev-packages.list` — apt packages
+- `config/vscode-extensions.list` — VS Code extension IDs (`code --list-extensions` dumps what you have)
+
+Both start minimal on purpose rather than guessing at languages and toolchains up front.
+
+For anything bigger, drop a numbered script in `modules/` — `install.sh` picks it up automatically. Use the helpers in `lib/common.sh` (`apt_install`, `ensure_block_in_file`, `backup_file`, `read_list_file`, `mark_needs_reboot`, `log`) so it inherits the same idempotency and dry-run behavior as everything else.
 
 ## Left manual, on purpose
 
-- **Git identity** (`git config --global user.name/user.email`) — personal values that shouldn't be hardcoded into a public script, and a curl-piped script has no interactive stdin to prompt with anyway.
-- **Claude Code login** — `70-claude-code.sh` installs the CLI, but logging in is an interactive browser OAuth flow; run `claude` from `~/Dev` (or a project under it) afterward to authenticate.
-- **Inserting the Guest Additions CD image** — `50-guest-additions.sh` installs from the ISO the host provides (Devices → Insert Guest Additions CD image), because that's always version-matched to your VirtualBox host. If the ISO isn't mounted the module says so and exits cleanly; insert it and re-run `install.sh`.
+- **Git identity** (`git config --global user.name/user.email`) — personal values that don't belong hardcoded in a public script, and a curl-piped script has no interactive stdin to prompt with anyway.
+- **Claude Code login** — the CLI installs automatically, but logging in is an interactive browser OAuth flow. Run `claude` from `~/Dev` afterward.
+- **Inserting the Guest Additions CD image** — from the VirtualBox menu: Devices → Insert Guest Additions CD image. The script installs from that ISO rather than from apt, because the ISO always matches your host's VirtualBox version, while apt's copy is old enough to break display resizing and clipboard. If the ISO isn't mounted the module says so and exits cleanly — insert it and re-run.
 
-`03-gh-auth.sh` is the one interactive step that runs inline. It asks `Would you like to complete GitHub authentication now? [y/N]` and only launches the login flow if you say yes. It reads from `/dev/tty` explicitly so it still works when `install.sh` was invoked via `curl | bash` (where stdin is the pipe, not a terminal), and skips itself entirely if `gh auth status` already shows you're logged in.
-
-## Different from effective_kali
-
-- No `pimpmykali` equivalent (Kali-only tool, detects/fixes Kali specifically) — this branch starts straight from the GitHub CLI/sudo/auth bootstrap steps.
-- Passwordless sudo is a `/etc/sudoers.d/` fragment instead of `kali-grant-root`, always `visudo -c` validated before being installed so a bad fragment never lands and locks out sudo.
-- **Terminator is installed and left alone.** The Kali branch bakes in a full config (Dark-Pastel profile from the TerminatorThemes plugin, custom keybindings/layout); that config was written against Kali's Terminator build and its theme assets, and porting it here left Terminator broken. Stock defaults work fine.
-- **zsh is configured with Oh My Zsh** rather than the Kali branch's hand-rolled prompt/alias override block.
-- Font settings use `gsettings` (GNOME) instead of `xfconf-query` (XFCE), and `fonts-hack` has to be installed explicitly — it ships with Kali's desktop but not with Pop!_OS, and `gsettings` accepts an unavailable font name without complaint, so leaving it out meant the monospace setting silently did nothing.
-- `10-cleanup.sh` also has to rewrite `~/.config/user-dirs.dirs`. Kali already ships with those four entries pointed at `$HOME`; Pop!_OS doesn't, so `xdg-user-dirs-update` recreated all four at the next login until this branch started repointing them.
-- Guest Additions comes from the host ISO rather than apt: `virtualbox-guest-x11` is in `multiverse` and pinned to 6.1.32 on jammy, which breaks display auto-resize and clipboard against a VirtualBox 7.x host.
+GitHub auth is the one interactive step that runs inline, and it asks first. It reads from `/dev/tty` so it works even under `curl | bash`, and skips itself entirely if you're already logged in.

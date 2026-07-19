@@ -87,13 +87,31 @@ backup_file() {
     fi
 }
 
-# mark_needs_reboot — called by modules that made a first-time system change
-# (pimpmykali actually ran, kali-grant-root policy actually flipped) so
-# install.sh knows to reboot once at the very end of this run.
+# mark_needs_reboot — called by a module that made a first-time system change
+# needing one (currently only Guest Additions, which builds kernel modules) so
+# install.sh can reboot once at the very end of the run rather than
+# interrupting it. Re-runs where nothing changed leave the marker unset, so
+# routine rebuilds finish without a reboot.
 mark_needs_reboot() {
     touch "$ELD_REBOOT_MARKER"
 }
 
 have_cmd() {
     command -v "$1" >/dev/null 2>&1
+}
+
+# read_list_file <file> — prints one entry per line from a simple list file,
+# stripping "#" comments and surrounding whitespace and skipping blanks.
+# Backs the config/*.list extension points (dev packages, VS Code extensions).
+# The `|| [ -n "$line" ]` keeps the final entry when the file has no trailing
+# newline.
+read_list_file() {
+    local file="$1" line
+    [ -f "$file" ] || return 0
+    while IFS= read -r line || [ -n "$line" ]; do
+        line="${line%%#*}"
+        line="${line#"${line%%[![:space:]]*}"}"
+        line="${line%"${line##*[![:space:]]}"}"
+        [ -n "$line" ] && printf '%s\n' "$line"
+    done <"$file"
 }

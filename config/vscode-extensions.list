@@ -1,0 +1,15 @@
+# VS Code extensions installed by modules/90-vscode.sh.
+#
+# One extension ID per line, in publisher.name form. Blank lines and lines
+# starting with # are ignored. Find an extension's ID on its Marketplace page
+# under "More Info", or run `code --list-extensions` to dump what you already
+# have installed.
+#
+# Starts empty on purpose — same reasoning as dev-packages.list. Add what you
+# actually reach for, commit, and re-run install.sh. Installs are idempotent,
+# so re-running never duplicates or downgrades anything.
+#
+# For example:
+#   ms-python.python
+#   ms-azuretools.vscode-docker
+#   esbenp.prettier-vscode

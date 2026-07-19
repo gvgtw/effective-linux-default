@@ -1,17 +1,19 @@
 #!/usr/bin/env bash
-# Default/monospace fonts (via gsettings — Pop!_OS 22.04 is GNOME, so the
-# org.gnome.desktop.interface keys apply; the effective_kali branch uses
-# xfconf-query for XFCE) and Terminator autostart. No wallpaper/lock-screen
-# here: those were Kali-branded assets with no Pop!_OS equivalent, dropped
-# rather than guessed at.
+# Default/monospace fonts and Terminator autostart.
+#
+# Pop!_OS 22.04 is GNOME, so the org.gnome.desktop.interface gsettings keys
+# apply. Wallpaper and lock-screen theming are deliberately not set here —
+# too personal to bake into a provisioning script, and trivial to change in
+# Settings.
 set -euo pipefail
 
 AUTOSTART_DIR="$HOME/.config/autostart"
 AUTOSTART_FILE="$AUTOSTART_DIR/terminator.desktop"
 
-# Hack ships with Kali's desktop but not with Pop!_OS. gsettings takes the
-# font-name key as an opaque string and never validates it, so without this
-# the monospace setting below silently falls back to the system default.
+# Hack isn't installed on Pop!_OS by default. gsettings treats the font-name
+# key as an opaque string and never validates it, so if the font is missing
+# the monospace setting below silently falls back to the system default with
+# no error — install it first or the setting does nothing.
 apt_install fonts-hack
 
 if [ "${ELD_DRY_RUN:-0}" = "1" ]; then

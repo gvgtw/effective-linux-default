@@ -2,13 +2,16 @@
 # Installs zsh + Oh My Zsh with stock defaults, plus the two plugins worth
 # having (autosuggestions, syntax highlighting).
 #
-# Unlike the effective_kali branch, this does NOT own ~/.zshrc. Oh My Zsh
-# writes its own .zshrc on first install and this module never overwrites it
-# afterwards — everything we add goes in a marker-guarded block appended at
-# the end, via ensure_block_in_file. That block is also where ~/.local/bin
-# gets onto PATH: the Claude Code installer (modules/70-claude-code.sh)
-# appends its own PATH line to ~/.zshrc, and a module that rewrote the file
-# wholesale on every run would silently delete it on the second rebuild.
+# This module does NOT own ~/.zshrc. Oh My Zsh writes its own .zshrc on first
+# install and this module never overwrites it afterwards — everything we add
+# goes in a marker-guarded block appended at the end, via
+# ensure_block_in_file.
+#
+# That matters for more than tidiness. The block is also where ~/.local/bin
+# gets onto PATH, and the Claude Code installer (modules/95-claude-code.sh)
+# appends its own PATH line to the same file. An earlier version rewrote
+# .zshrc wholesale on every run, which silently deleted that line on the
+# second rebuild and dropped `claude` off PATH.
 set -euo pipefail
 
 ZSHRC="$HOME/.zshrc"

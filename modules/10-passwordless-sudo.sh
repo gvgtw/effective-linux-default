@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
-# Functional equivalent of Kali's kali-grant-root, since Pop!_OS has no
-# equivalent package: a NOPASSWD sudoers.d entry for the current user.
-# Applies immediately, no reboot needed. Always validated with `visudo -c`
-# BEFORE it's ever copied into /etc/sudoers.d/ — a broken file there can
-# lock sudo out entirely, so an invalid fragment is discarded, never
-# installed.
+# Passwordless sudo for the current user, as a NOPASSWD /etc/sudoers.d/
+# fragment. Applies immediately, no reboot needed.
+#
+# Always validated with `visudo -c` BEFORE it's ever copied into
+# /etc/sudoers.d/ — a syntactically broken file there can lock sudo out
+# entirely, so an invalid fragment is discarded rather than installed.
 set -euo pipefail
 
 SUDOERS_FILE="/etc/sudoers.d/effective-linux-default-nopasswd"
-# Written by earlier revisions of this branch, back when it targeted stock
-# Ubuntu. Left in place it'd be a second, redundant NOPASSWD grant.
+# Written by earlier revisions of this script under a different name. Left in
+# place it'd be a second, redundant NOPASSWD grant.
 LEGACY_SUDOERS_FILE="/etc/sudoers.d/effective-ubuntu-nopasswd"
 EXPECTED_CONTENT="$USER ALL=(ALL) NOPASSWD:ALL"
 
