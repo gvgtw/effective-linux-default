@@ -10,6 +10,8 @@
 - ARCHITECTURE.md — map of the system as it exists: components and their
   responsibilities, interactions, entry points, non-obvious conventions.
 
+Create any of these files that doesn't exist when it's first needed.
+
 ## Session start
 1. Read TODO.md and PLAN.md.
 2. Read the last entry in JOURNAL.md (tail of the file).

@@ -16,6 +16,8 @@ explanation is.
 - QUESTIONS.md — open questions to bring to lectures, office hours, or
   future sessions.
 
+Create any of these files that doesn't exist when it's first needed.
+
 ## Session start
 1. Read COURSE.md and the last entry in LEARNING_LOG.md.
 2. Pick 1-2 items from CONCEPTS.md (Shaky or Struggling) and open with a
