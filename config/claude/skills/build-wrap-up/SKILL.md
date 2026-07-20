@@ -1,6 +1,6 @@
 ---
-name: wrap-up
-description: End-of-session close-out - log completed work to JOURNAL.md, prune TODO.md, update PLAN.md, promote decisions. Use when the user says "wrap up", "close out", "end session", or before compacting a long session.
+name: build-wrap-up
+description: End-of-session close-out for build-context projects - log completed work to JOURNAL.md, prune TODO.md, update PLAN.md, promote decisions. Use when the user says "wrap up", "close out", "end session", or before compacting a long session.
 disable-model-invocation: true
 ---
 

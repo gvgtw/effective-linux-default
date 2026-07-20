@@ -53,13 +53,17 @@ explanation is.
   didn't derive it myself.
 
 ## Session end ("wrap up")
-1. Feynman check: ask me to explain the main concept from today as if
-   to a beginner. Judge it honestly.
-2. Update CONCEPTS.md: promote/demote based on today's performance,
-   including the Feynman check result.
-3. Append a LEARNING_LOG.md entry: date, topics, misconceptions
-   uncovered, and 2-3 specific review items for next session.
-4. Add any unresolved questions to QUESTIONS.md.
+The close-out procedure lives in the `learn-study-wrap` skill, which is
+slash-command-only and therefore invisible to you — you cannot run it and
+should not try to reconstruct it. In particular, don't improvise a Feynman
+check: its grading rubric lives in the skill, and a lenient off-the-cuff
+grade is worse than no grade.
 
-Use the `learn-*` skills. Ignore the `build-*` skills; they belong to the
-vibe-coding context and do not apply here.
+When I say "wrap up", reply asking me to run `/learn-study-wrap` and stop
+there.
+
+## Skills
+Skills for both contexts are installed in `~/.claude/skills/`, all
+slash-command-only. This project is a learn context: `/learn-study-wrap`
+applies here, `build-*` belongs to the vibe-coding context. If I invoke a
+`build-*` command here, say so rather than going along with it.

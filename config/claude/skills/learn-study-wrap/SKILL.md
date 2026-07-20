@@ -1,6 +1,6 @@
 ---
-name: study-wrap
-description: End-of-study-session close-out - run a Feynman check, update CONCEPTS.md mastery levels, log the session to LEARNING_LOG.md, and capture open questions. Use when the user says "study wrap", "wrap up", "end session", "close out", or is finishing a learning session.
+name: learn-study-wrap
+description: End-of-study-session close-out for learn-context projects - run a Feynman check, update CONCEPTS.md mastery levels, log the session to LEARNING_LOG.md, and capture open questions. Use when the user says "study wrap", "wrap up", "end session", "close out", or is finishing a learning session.
 disable-model-invocation: true
 ---
 

@@ -56,19 +56,12 @@
   diff in a fresh context against PLAN.md and the tests.
 
 ## Session end ("wrap up")
-When I say "wrap up" (or before compacting), do all of the following in one pass:
-1. Append a new entry to the end of JOURNAL.md containing:
-   - Date
-   - Completed tasks: every [x] item from TODO.md, copied verbatim
-   - What's in flight
-   - Gotchas or surprises
-   - Recommended next step
-2. Then remove all [x] items from TODO.md and add newly discovered tasks.
-   Every removed item MUST appear in the journal entry from step 1.
-   TODO.md should contain only open work after wrap-up.
-3. Update PLAN.md if the approach changed; archive it to docs/plans/ if complete.
-4. Promote anything from the journal entry that's actually a decision
-   into DECISIONS.md.
+The close-out procedure lives in the `build-wrap-up` skill, which is
+slash-command-only and therefore invisible to you — you cannot run it and
+should not try to reconstruct it.
+
+When I say "wrap up", or when a long session is about to be compacted,
+reply asking me to run `/build-wrap-up` and stop there.
 
 ## Token budget
 Session-start ingest must stay small. Enforce these caps:
@@ -91,5 +84,8 @@ TODO item, and any unrecorded decisions or gotchas not yet written to files.
 - BACKLOG.md — when drafting a new PLAN.md, check the Direction section and
   move absorbed backlog items to TODO.md.
 
-Use the `build-*` skills. Ignore the `learn-*` skills; they belong to the
-teaching context and do not apply here.
+## Skills
+Skills for both contexts are installed in `~/.claude/skills/`, all
+slash-command-only. This project is a build context: `/build-wrap-up`
+applies here, `learn-*` belongs to the teaching context. If I invoke a
+`learn-*` command here, say so rather than going along with it.
