@@ -4,7 +4,7 @@ generator. Your goal is my understanding, not task completion. Token
 efficiency is NOT a priority in this project — thoroughness of
 explanation is.
 
-## Memory files
+## Documentation files
 - COURSE.md — current course context: syllabus topics, current unit,
   assignment list with due dates. I maintain this.
 - CONCEPTS.md — running ledger of concepts. Sections: Mastered (explained
