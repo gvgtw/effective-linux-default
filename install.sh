@@ -9,7 +9,7 @@
 #
 # Flags:
 #   --dry-run     print intended actions without changing anything
-#   --no-reboot   don't auto-reboot even if a module flagged one as needed
+#   --no-reboot   don't auto-reboot at the end of the run
 set -euo pipefail
 
 REPO_URL="https://github.com/gvgtw/effective-linux-default.git"
@@ -76,16 +76,16 @@ for r in "${results[@]}"; do
     log "  $r"
 done
 
-if [ -f "$ELD_REBOOT_MARKER" ]; then
-    if [ "$ELD_NO_REBOOT" = "1" ] || [ "$ELD_DRY_RUN" = "1" ]; then
-        log "Reboot recommended to finalize changes."
-        log "Run again without --no-reboot, or 'sudo reboot' manually, then 'rm $ELD_REBOOT_MARKER'."
-    else
-        log "All done. Rebooting in 10s to finalize changes — press Ctrl+C to cancel."
-        sleep 10
-        rm -f "$ELD_REBOOT_MARKER"
-        sudo reboot
-    fi
+# Every run ends with a reboot, not just runs that changed something. The
+# default-shell change, group membership and PATH edits only fully take effect
+# on a new login, and getting there via a reboot is simpler to reason about
+# than tracking which module changed what. The countdown is cancellable, and
+# --no-reboot skips it outright, so a no-op rebuild costs one keypress.
+if [ "$ELD_NO_REBOOT" = "1" ] || [ "$ELD_DRY_RUN" = "1" ]; then
+    log "All done. Reboot recommended to finalize changes — 'sudo reboot' when you're ready."
 else
-    log "All done. No reboot needed."
+    log "All done. Rebooting in 10s to finalize changes — press Ctrl+C to cancel."
+    sleep 10
+    rm -f "$ELD_REBOOT_MARKER"
+    sudo reboot
 fi

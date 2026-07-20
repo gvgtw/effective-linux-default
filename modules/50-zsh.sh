@@ -18,7 +18,7 @@ ZSHRC="$HOME/.zshrc"
 OMZ_DIR="$HOME/.oh-my-zsh"
 OMZ_CUSTOM="${ZSH_CUSTOM:-$OMZ_DIR/custom}"
 OMZ_INSTALL_URL="https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh"
-OMZ_THEME="clean"
+OMZ_THEME="risto"
 
 apt_install zsh git curl
 

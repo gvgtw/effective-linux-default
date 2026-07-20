@@ -87,11 +87,13 @@ backup_file() {
     fi
 }
 
-# mark_needs_reboot — called by a module that made a first-time system change
-# needing one (currently only Guest Additions, which builds kernel modules) so
-# install.sh can reboot once at the very end of the run rather than
-# interrupting it. Re-runs where nothing changed leave the marker unset, so
-# routine rebuilds finish without a reboot.
+# mark_needs_reboot — sets the reboot marker.
+#
+# This no longer gates anything: install.sh reboots at the end of every run
+# regardless, since chsh, group membership and PATH changes all only land on a
+# new login. It's kept as the way a module can record that it made a change
+# needing one, and so modules written against the old contract keep working.
+# No module currently calls it.
 mark_needs_reboot() {
     touch "$ELD_REBOOT_MARKER"
 }
